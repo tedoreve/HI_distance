@@ -22,6 +22,7 @@ analyze  = 'cont'               # cont,spec,both
 spec_v  = 100
 xlim    = [-100000,100000]
 ylim    = [-0.5,2]
+spectrum= True
 dist    = True
 model   = 'constant'            #constant, model
 V       = 220                   #km/s
@@ -162,11 +163,13 @@ spec_head['CUNIT3'] = 'm/s'
     
 if analyze == 'spec' or analyze == 'both':
     plot(spec_data,spec_head,0,'spectrum',region,spec_v)
-    spec_on0  = box(spec_data,spec_head,0,'cont_on',region,on,spec_v)
-    spec_off0 = box(spec_data,spec_head,0,'cont_off',region,off,spec_v)
+    if on != []:
+        spec_on0  = box(spec_data,spec_head,0,'cont_on',region,on,spec_v)
+    if off != []:    
+        spec_off0 = box(spec_data,spec_head,0,'cont_off',region,off,spec_v)
 
 #=============================optical depth====================================
-if analyze == 'cont' or analyze == 'both':
+if spectrum:
     spec_on  = spec_box(spec_data,spec_head,on)
     spec_off = spec_box(spec_data,spec_head,off)
     e_tau    = 1+(np.mean(np.mean(spec_on,axis=1),axis=1)                     \
