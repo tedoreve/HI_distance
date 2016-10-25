@@ -7,6 +7,7 @@ Created on Wed Oct 19 08:58:41 2016
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as font_manager
 #matplotlib.use('Agg')
 import matplotlib.path as mpath
 from astropy.io import fits
@@ -18,7 +19,7 @@ file    = ['../data/VGPS_cont_MOS049.fits','../data/MOS_049.Tb.fits','../data/ro
 region  = [48.5,49.5,-1,0]      #region l1,l2,b1,b2
 on      = [49,49.3,-0.76,-0.65]
 off     = [49,49.3,-0.9,-0.65]
-analyze  = 'cont'               # cont,spec,both
+analyze  = ''               # cont,spec,both
 spec_v  = 100
 xlim    = [-100000,100000]
 ylim    = [-0.5,2]
@@ -35,7 +36,10 @@ def plot_origin(data,head,contrast,name):
     w = wcs.WCS(head)
     if head['NAXIS'] == 2:
         l1,b1 = w.wcs_pix2world(0,0,0)
-        l2,b2 = w.wcs_pix2world(data.shape[1],data.shape[0],0)   
+        l2,b2 = w.wcs_pix2world(data.shape[1],data.shape[0],0)
+    if head['NAXIS'] == 3:
+        l1,b1,v = w.wcs_pix2world(0,0,0,0)
+        l2,b2,v = w.wcs_pix2world(data.shape[1],data.shape[0],0,0)    
     if head['NAXIS'] == 4:
         l1,b1,v,s = w.wcs_pix2world(0,0,0,0,0)
         l2,b2,v,s = w.wcs_pix2world(data.shape[1],data.shape[0],0,0,0)
@@ -72,6 +76,9 @@ def coo_box(head,region):
     if head['NAXIS'] == 2:
         x1,y1 = w.wcs_world2pix(l2,b1,0)
         x2,y2 = w.wcs_world2pix(l1,b2,0)   
+    if head['NAXIS'] == 3:
+        x1,y1,v = w.wcs_world2pix(l2,b1,0,0)
+        x2,y2,v = w.wcs_world2pix(l1,b2,0,0)
     if head['NAXIS'] == 4:
         x1,y1,v,s = w.wcs_world2pix(l2,b1,0,0,0)
         x2,y2,v,s = w.wcs_world2pix(l1,b2,0,0,0)
@@ -179,14 +186,20 @@ if spectrum:
     v        = velocity(spec_data,spec_head) 
     
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
-    ax1.plot(v, np.mean(np.mean(spec_on,axis=1),axis=1))
-    ax1.plot(v, np.mean(np.mean(spec_off,axis=1),axis=1))
+    l1 = ax1.plot(v, np.mean(np.mean(spec_on,axis=1),axis=1),label='on')
+    l2 = ax1.plot(v, np.mean(np.mean(spec_off,axis=1),axis=1),label='off')
+    props = font_manager.FontProperties(size=10)
+    ax1.legend(loc='upper left', shadow=True, fancybox=True, prop=props)
+    ax1.plot()
     ax1.set_title('absorption spectrum')
     ax1.set_ylim(y2lim[0],y2lim[1])
-    ax2.plot(v, e_tau)
+    l3 = ax2.plot(v, e_tau)
     ax2.set_xlim(xlim[0],xlim[1])
     ax2.set_ylim(ylim[0],ylim[1])
     fig.subplots_adjust(hspace=0)
+    plt.legend()
+    plt.show()
+    
 
 #=============================distance=========================================    
 if dist:
