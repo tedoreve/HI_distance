@@ -15,22 +15,22 @@ from astropy import wcs
 from astropy import units as un
 from astropy import constants as con
 
-file    = ['../data/VGPS_cont_MOS049.fits','../data/MOS_049.Tb.fits','../data/rotation_model.txt']
+file    = ['../data/CONT_49deg_1400mhz_25arc_thor_vgps.fits','../data/THOR_HI_with_continuum_L49.25_image.fits','../data/rotation_model.txt']
 region  = [48.5,49.5,-1,0]      #region l1,l2,b1,b2
 on      = [49,49.3,-0.76,-0.65]
 off     = [49,49.3,-0.9,-0.65]
-analyze  = ''               # cont,spec,both
+analyze  = 'both'               # cont,spec,both
 spec_v  = 100
 xlim    = [-100000,100000]
 ylim    = [-0.5,2]
 spectrum= True
-dist    = True
+dist    = False
 model   = 'constant'            #constant, model
 V       = 220                   #km/s
 d       = np.linspace(1,40,100)
 l       = 49.2
 b       = 0
-y2lim   = [-1,120]      
+#y2lim   = [-1,120]      
 #=============================assistant code===================================
 def plot_origin(data,head,contrast,name):
     w = wcs.WCS(head)
@@ -45,7 +45,9 @@ def plot_origin(data,head,contrast,name):
         l2,b2,v,s = w.wcs_pix2world(data.shape[1],data.shape[0],0,0,0)
 
     result = data
-    result = (result-np.mean(result))+np.mean(result)*contrast
+    np.nan_to_num(result)
+#    result = (result-np.mean(result))+np.mean(result)*contrast
+    
     
     fig, ax = plt.subplots() 
     plt.title(name)
@@ -124,7 +126,12 @@ def spec_box(data,head,onoff):
 def velocity(data,head):
     w   = wcs.WCS(head)
     pix = np.linspace(1,data.shape[0],data.shape[0])
-    x,y,v,s   = w.wcs_pix2world(0,0,pix,0,0)
+    if head['NAXIS'] == 3:
+
+        x,y,v   = w.wcs_pix2world(0,0,pix,0)
+    if head['NAXIS'] == 4:
+
+        x,y,v,s   = w.wcs_pix2world(0,0,pix,0,0)
     return v
     
 def mod():
@@ -151,8 +158,17 @@ def v_d(model,l,b,d,V = 220,v_sun = 220,r_sun = 8.5):
 #=============================continuum========================================
 cont = fits.open(file[0])
 cont_head = cont[0].header
-cont_data = cont[0].data[0,0,:,:]
-cont_head['CUNIT3'] = 'm/s'
+cont_data = cont[0].data[0,:,:]
+cont_head['CUNIT3'] = 'Hz'
+cont_head.pop('PC01_01')
+cont_head.pop('PC02_01')
+cont_head.pop('PC03_01')
+cont_head.pop('PC01_02')
+cont_head.pop('PC02_02')
+cont_head.pop('PC03_02')
+cont_head.pop('PC01_03')
+cont_head.pop('PC02_03')
+cont_head.pop('PC03_03')
 plot_origin(cont_data,cont_head,0,'origin')
 
 if analyze == 'cont' or analyze == 'both':
@@ -165,8 +181,17 @@ if analyze == 'cont' or analyze == 'both':
 #=============================spectrum=========================================
 spec = fits.open(file[1])
 spec_head = spec[0].header
-spec_data = spec[0].data[0,:,:,:]
+spec_data = spec[0].data[:,:,:]
 spec_head['CUNIT3'] = 'm/s'
+spec_head.pop('PC01_01')
+spec_head.pop('PC02_01')
+spec_head.pop('PC03_01')
+spec_head.pop('PC01_02')
+spec_head.pop('PC02_02')
+spec_head.pop('PC03_02')
+spec_head.pop('PC01_03')
+spec_head.pop('PC02_03')
+spec_head.pop('PC03_03')
     
 if analyze == 'spec' or analyze == 'both':
     plot(spec_data,spec_head,0,'spectrum',region,spec_v)
@@ -186,8 +211,8 @@ if spectrum:
     v        = velocity(spec_data,spec_head) 
     
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
-    l1 = ax1.plot(v, np.mean(np.mean(spec_on,axis=1),axis=1),label='on')
-    l2 = ax1.plot(v, np.mean(np.mean(spec_off,axis=1),axis=1),label='off')
+    l1 = ax1.plot(v, np.mean(np.mean(spec_on,axis=1),axis=1)- np.mean(cont_on),label='on')
+    l2 = ax1.plot(v, np.mean(np.mean(spec_off,axis=1),axis=1)- np.mean(cont_off),label='off')
     props = font_manager.FontProperties(size=10)
     ax1.legend(loc='upper left', shadow=True, fancybox=True, prop=props)
     ax1.plot()
