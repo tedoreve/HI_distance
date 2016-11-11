@@ -14,75 +14,18 @@ from astropy.io import fits
 from astropy import wcs
 from astropy import units as u
 import copy as cp
+from astropy.tests import zmf as z
 #from astropy import constants as con
     
 #=============================assistant code===================================
-
-#------------------------------coordinates-------------------------------------
-def coo_box(head,region):
-    '''
-    get box pixel coordinates 
-    '''
-    l1,l2,b1,b2 = region
-    w = wcs.WCS(head)
-    if head['NAXIS'] == 2:
-        x1,y1 = w.wcs_world2pix(l2,b1,0)
-        x2,y2 = w.wcs_world2pix(l1,b2,0)   
-    if head['NAXIS'] == 3:
-        x1,y1,v = w.wcs_world2pix(l2,b1,0,0)
-        x2,y2,v = w.wcs_world2pix(l1,b2,0,0)
-    if head['NAXIS'] == 4:
-        x1,y1,v,s = w.wcs_world2pix(l2,b1,0,0,0)
-        x2,y2,v,s = w.wcs_world2pix(l1,b2,0,0,0)
-    return x1,y1,x2,y2
-        
-def coo_circle(head,region):
-    '''
-    get circle pixel coordinates
-    '''
-    l,b,r = region
-    r = r/np.abs(head['CDELT1'])
-    w = wcs.WCS(head)
-    if head['NAXIS'] == 2:
-        x,y = w.wcs_world2pix(l,b,0)
-    if head['NAXIS'] == 3:
-        x,y,v = w.wcs_world2pix(l,b,0,0)
-    if head['NAXIS'] == 4:
-        x,y,v,s = w.wcs_world2pix(l,b,0,0,0)
-    return x,y,r
-
 #--------------------------------plot------------------------------------------
-def plot_origin(data,head,contrast,name):
-    '''
-    plot original continuum figure
-    '''
-    w = wcs.WCS(head)
-    if head['NAXIS'] == 2:
-        l1,b1 = w.wcs_pix2world(0,0,0)
-        l2,b2 = w.wcs_pix2world(data.shape[1],data.shape[0],0)
-    if head['NAXIS'] == 3:
-        l1,b1,v = w.wcs_pix2world(0,0,0,0)
-        l2,b2,v = w.wcs_pix2world(data.shape[1],data.shape[0],0,0)    
-    if head['NAXIS'] == 4:
-        l1,b1,v,s = w.wcs_pix2world(0,0,0,0,0)
-        l2,b2,v,s = w.wcs_pix2world(data.shape[1],data.shape[0],0,0,0)
-
-    result0 = data
-    result0 = np.nan_to_num(result0)
-    result0 = (result0-np.mean(result0))+np.mean(result0)*contrast
-
-    plt.subplots() 
-    plt.title(name)
-    plt.imshow(np.log(result0),origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
-    plt.grid()
     
-
 def box(data,head,contrast,name,region,onoff,*args):
     '''
     plot box pixel coordinates
     '''
     l1,l2,b1,b2 = region  
-    x1,y1,x2,y2 = coo_box(head,region)
+    x1,y1,x2,y2 = z.coo_box(head,region)
     if data.ndim == 2:
         result0 = data[y1:y2,x1:x2]
     if data.ndim == 3:
@@ -91,7 +34,10 @@ def box(data,head,contrast,name,region,onoff,*args):
     
     plt.subplots() 
     plt.title(name)
-    plt.imshow(np.log(result0),origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+    plt.imshow(result0,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+    plt.colorbar()
+    plt.xlabel(r'$l(J2000)$')
+    plt.ylabel(r'$b(J2000)$')    
     
     Path = mpath.Path
     path_data = [
@@ -109,7 +55,7 @@ def box(data,head,contrast,name,region,onoff,*args):
     plt.ylim(b1,b2)
     plt.grid()
     
-    x1,y1,x2,y2 = coo_box(head,onoff)  
+    x1,y1,x2,y2 = z.coo_box(head,onoff)  
     if data.ndim == 2:
         result = data[y1:y2,x1:x2]
     if data.ndim == 3:
@@ -122,7 +68,7 @@ def circle(data,head,contrast,name,region,onoff,*args):
     plot circle pixel coordinates
     '''
     l1,l2,b1,b2 = region  
-    x1,y1,x2,y2 = coo_box(head,region)
+    x1,y1,x2,y2 = z.coo_box(head,region)
     if data.ndim == 2:
         result0 = data[y1:y2,x1:x2]
     if data.ndim == 3:
@@ -132,8 +78,11 @@ def circle(data,head,contrast,name,region,onoff,*args):
     plt.subplots()
     plt.title(name)
     plt.imshow(result0,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+    plt.colorbar()
+    plt.xlabel(r'$l(J2000)$')
+    plt.ylabel(r'$b(J2000)$')  
     
-    x,y,r = coo_circle(head,onoff)
+    x,y,r =z.coo_circle(head,onoff)
     
     an = np.linspace(0, 2*np.pi, 100)
     plt.plot(onoff[2]*np.cos(an)+onoff[0], onoff[2]*np.sin(an)+onoff[1])
@@ -178,46 +127,33 @@ def mod(file):
     fig, ax = plt.subplots() 
     plt.title('rotation curve')
     plt.plot(V_R[:,0],V_R[:,1]+30)
-    return V_R
-    
-def conversion(bmaj,bmin):
-    '''
-    Jy/beam -> K
-    '''
-    bmaj = bmaj*u.deg
-    bmin = bmin*u.deg
-    fwhm_to_sigma = 1./(8*np.log(2))**0.5
-    beam_area = 2.*np.pi*(bmaj*bmin*fwhm_to_sigma**2)
-    freq = 1.4*u.GHz
-    equiv = u.brightness_temperature(beam_area, freq)
-    return u.Jy.to(u.K, equivalencies=equiv)  
+    return V_R 
 
 #=============================continuum========================================
 def continuum(file,analyze,region,on,off,contrast):
     cont = fits.open(file)
     cont_head = cont[0].header
-    cont_data = cont[0].data[0,:,:]*conversion(cont_head['BMAJ'],cont_head['BMIN'])
+    cont_data = cont[0].data[0,:,:]*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
     cont.close()
     cont_head['CUNIT3'] = 'Hz'
     
-    plot_origin(cont_data,cont_head,0,'origin')
-    
+    z.plot_fits(cont_data,cont_head,1,'origin')
     
     if analyze == 'box':
         if on != []:
-            cont_on  = box(cont_data,cont_head,0,'cont_on',region,on)
+            cont_on  = box(cont_data,cont_head,1,'cont_on',region,on)
         if off != []:
-            cont_off = box(cont_data,cont_head,0,'cont_off',region,off)
+            cont_off = box(cont_data,cont_head,1,'cont_off',region,off)
     elif analyze == 'circle':
-            cont_on  = circle(cont_data,cont_head,0,'cont_on',region,on)
-            cont_off = circle(cont_data,cont_head,0,'cont_off',region,off)
+            cont_on  = circle(cont_data,cont_head,1,'1420MHz continuum (K)',region,on)
+            cont_off = circle(cont_data,cont_head,1,'cont_off',region,off)
     return cont_on,cont_off
 
 #=============================spectra==========================================
 def spectra(file,analyze,region,on,off,contrast,spec_v):
     spec = fits.open(file)
     spec_head = spec[0].header
-    spec_data = spec[0].data[:,:,:]*conversion(spec_head['BMAJ'],spec_head['BMIN'])
+    spec_data = spec[0].data[:,:,:]*z.conversion(1.4,spec_head['BMAJ'],spec_head['BMIN'])
     spec.close()
     spec_head['CUNIT3'] = 'm/s'
         
@@ -225,14 +161,14 @@ def spectra(file,analyze,region,on,off,contrast,spec_v):
         
     if analyze == 'box':
         if on != []:
-            spec_on  = box(spec_data,spec_head,0,'cont_on',region,on,spec_v)
+            spec_on  = box(spec_data,spec_head,1,'cont_on',region,on,spec_v)
         if off != []:    
-            spec_off = box(spec_data,spec_head,0,'cont_off',region,off,spec_v)
+            spec_off = box(spec_data,spec_head,1,'cont_off',region,off,spec_v)
     elif analyze == 'circle':
         if on != []:
-            spec_on  = circle(spec_data,spec_head,0,'cont_on',region,on,spec_v)
+            spec_on  = circle(spec_data,spec_head,1,'1612MHz spectrum map (K) at '+str(int(v[spec_v]))+' m/s',region,on,spec_v)
         if off != []:    
-            spec_off = circle(spec_data,spec_head,0,'cont_off',region,off,spec_v)
+            spec_off = circle(spec_data,spec_head,1,'cont_off',region,off,spec_v)
     return spec_on,spec_off,v
 
 #=============================absorption=======================================
@@ -258,7 +194,7 @@ def absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze):
     ax1.set_ylabel('T(K)')
     props = font_manager.FontProperties(size=10)
     ax1.legend(loc='upper left', shadow=True, fancybox=True, prop=props)
-    ax1.set_title('absorption spectra')
+    ax1.set_title('OH 1665MHz spectra')
 #    ax1.set_ylim(y2lim[0],y2lim[1])
     ax2.plot(v[70:], e_tau[70:])
     ax2.set_ylabel(r'$e^{-\tau}$',fontsize=20)
@@ -329,10 +265,12 @@ if __name__=='__main__':
     file1   = '../data/CONT_49deg_1400mhz_25arc_thor_vgps.fits'
     file2   = '../data/OH_1665mhz_L49.25_deg.smooth20sec.fits'
     file3   = '../data/rotation_model.txt'
-    file4   = ['../data/OH_1720mhz_L49.25_deg.smooth20sec.fits','../data/OH_1665mhz_L49.25_deg.smooth20sec.fits','../data/OH_1612mhz_L49.25_deg.smooth20sec.fits']
+    file4   = ['../data/OH_1720mhz_L49.25_deg.smooth20sec.fits',              \
+               '../data/OH_1665mhz_L49.25_deg.smooth20sec.fits',              \
+               '../data/OH_1612mhz_L49.25_deg.smooth20sec.fits']
     region  = [49.1,49.3,-0.4,-0.2]      #region l1,l2,b1,b2
-    on      = [49.210,-0.340,0.015]
-    off     = [49.210,-0.340,0.025]
+    on      = [49.208,-0.3,0.012]
+    off     = [49.208,-0.3,0.022]
 #    on      = [49.176,-0.326,0.006]
 #    off     = [49.160,-0.310,0.006] OH1720
     contrast = 1
@@ -340,7 +278,7 @@ if __name__=='__main__':
     spec_v   = 84
     #xlim    = [-100000,100000]
     #ylim    = [-0.5,2]
-    model   = 'constant'            #constant, model
+    model   = '0.5'            #constant, model
     V       = 220                   #km/s
     d       = np.linspace(1,40,100)
     l       = 49.2
@@ -349,7 +287,7 @@ if __name__=='__main__':
     cont_on,cont_off    = continuum(file1,analyze,region,on,off,contrast)
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze)
-    v,r = dist(model,file3,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+#    v,r = dist(model,file3,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
     
 
 
