@@ -25,6 +25,8 @@ def box(data,head,region,onoff,*args):
         result = data[y1:y2,x1:x2]
     if data.ndim == 3:
         result = data[:,y1:y2,x1:x2]
+    if data.ndim == 4:
+        result = data[0,:,y1:y2,x1:x2]
         
     l1,l2,b1,b2 = region  
     x1,y1,x2,y2 = z.coo_box(head,region)
@@ -32,6 +34,8 @@ def box(data,head,region,onoff,*args):
         result0 = data[y1:y2,x1:x2]
     if data.ndim == 3:
         result0 = data[args[0],y1:y2,x1:x2]
+    if data.ndim == 4:
+        result0 = data[0,args[0],y1:y2,x1:x2]
         
     return result,result0
 #------------------about spectra,rotation curve--------------------------------    
@@ -40,15 +44,17 @@ def velocity(data,head):
     return spec velocity axis
     '''
     w   = wcs.WCS(head)
-    pix = np.linspace(1,data.shape[0],data.shape[0])
+    
     if head['NAXIS'] == 3:
+        pix = np.linspace(1,data.shape[0],data.shape[0])
         x,y,v   = w.wcs_pix2world(0,0,pix,0)
     if head['NAXIS'] == 4:
+        pix = np.linspace(1,data.shape[1],data.shape[1])
         x,y,v,s = w.wcs_pix2world(0,0,pix,0,0)
     return v
 
 #=============================mapp=============================================
-def mapp(file,region,res):
+def mapp(file,region,res,index,v_seq,m):
     #read continuum data
     cont = fits.open(file[0])
     cont_head = cont[0].header
@@ -59,13 +65,16 @@ def mapp(file,region,res):
     #read spectral data
     spec = fits.open(file[1])
     spec_head = spec[0].header
-    spec_data = spec[0].data[:,:,:]*z.conversion(1.4,spec_head['BMAJ'],spec_head['BMIN'])
+    spec_data = spec[0].data[:,:,:]#*z.conversion(1.4,spec_head['BMAJ'],spec_head['BMIN'])
     spec.close()
     spec_head['CUNIT3'] = 'm/s'
     
     #get velocity dimension in 3D spectral tube
     v = velocity(spec_data,spec_head)
-    v = v/1000 #from m/s to km/s
+    if v_seq == 'H':
+        v = v[::-1]/1000 #from m/s to km/s
+    elif v_seq =='OH':
+        v = v/1000
     
     #get chosen region coordinates in terms of given resolution
     deltal = (region[1]-region[0])/res
@@ -78,6 +87,7 @@ def mapp(file,region,res):
     
     #get chosen region continuum data and plot it
     cont_on,cont_reg  = box(cont_data,cont_head,region,on[0])
+#    cont_reg = ((cont_reg-np.mean(cont_reg))**2)**0.3+np.mean(cont_reg)*0
     plt.imshow(cont_reg,origin='lower')
     
     #set figure ticks
@@ -96,25 +106,33 @@ def mapp(file,region,res):
     plt.grid(linestyle='-')
     
     #get chosen region spectral data and plot it
+    big = np.zeros([res,res])
     for i in range(res):
         for j in range(res):
-            spec_on,spec_reg  = box(spec_data,spec_head,region,on[i+j*res],87)
+            spec_on,spec_reg  = box(spec_data,spec_head,region,on[i+j*res],87)            
             T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
-            plt.plot(v[38:]/res*cont_reg.shape[1]/144+                        \
+            big[i,j] = np.max(np.abs(T_on[index:]))
+            if big[i,j] < m:
+                big[i,j] = m
+            plt.plot(v[index:]*cont_reg.shape[1]/res/(v[-1]-v[index])-        \
+                      v[index]*cont_reg.shape[1]/res/(v[-1]-v[index])+        \
                      (res-j-1)*cont_reg.shape[1]/res,                         \
-            T_on[38:]/np.max(np.abs(T_on[38:]))*cont_reg.shape[0]/res/2+      \
+            T_on[index:]/big[i,j]*cont_reg.shape[0]/res/2+\
             cont_reg.shape[0]/res/2+i*cont_reg.shape[0]/res,color='m')
            
     plt.show()   
-    return cont_reg,v,on
+    return cont_reg,v,big
 
 #===============================main===========================================
 if __name__=='__main__':
     file     = ['../data/CONT_49deg_1400mhz_25arc_thor_vgps.fits',            \
-                '../data/OH_1612mhz_L49.25_deg.smooth20sec.fits']
-    region   = [48.7,49.7,-0.7,0.3]      #region l1,l2,b1,b2
+                '../data/OH_1665mhz_L49.25_deg.smooth20sec.fits']
+    region   = [49.4,49.6,-0.5,-0.3]      #region l1,l2,b1,b2
     res      = 8
-    cont_reg,v,on  = mapp(file,region,res)
+    index    = 48
+    v_seq    = 'OH'  # H OH
+    m        = 0.05  # control the scale of spectra
+    cont_reg,v,big  = mapp(file,region,res,index,v_seq,m)
 
     
 
