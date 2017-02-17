@@ -77,14 +77,16 @@ def circle(data,head,contrast,name,region,onoff,*args):
     plt.subplots()
     plt.title(name)
     plt.imshow(result0,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
-    plt.colorbar()
-    plt.xlabel(r'$l (deg)$')
-    plt.ylabel(r'$b (deg)$')  
+    cbar = plt.colorbar()
+    cbar.set_label('S (Jy/beam)')
+    
+    plt.xlabel('l (deg)')
+    plt.ylabel('b (deg)')  
     
     x,y,r =z.coo_circle(head,onoff)
     
     an = np.linspace(0, 2*np.pi, 100)
-    plt.plot(onoff[2]*np.cos(an)+onoff[0], onoff[2]*np.sin(an)+onoff[1])
+    plt.plot(onoff[2]*np.cos(an)+onoff[0], onoff[2]*np.sin(an)+onoff[1],'r')
     plt.xlim(l2,l1)
     plt.ylim(b1,b2)
     plt.grid()
@@ -152,7 +154,7 @@ def continuum(file,analyze,region,on,off,contrast):
 def spectra(file,analyze,region,on,off,contrast,spec_v):
     spec = fits.open(file)
     spec_head = spec[0].header
-    spec_data = spec[0].data[:,:,:]*z.conversion(1.4,spec_head['BMAJ'],spec_head['BMIN'])
+    spec_data = spec[0].data[:,:,:]*z.conversion(1.72,spec_head['BMAJ'],spec_head['BMIN'])
     spec.close()
     spec_head['CUNIT3'] = 'm/s'
         
@@ -165,7 +167,7 @@ def spectra(file,analyze,region,on,off,contrast,spec_v):
             spec_off = box(spec_data,spec_head,1,'cont_off',region,off,spec_v)
     elif analyze == 'circle':
         if on != []:
-            spec_on,spec_reg  = circle(spec_data,spec_head,1,'1612MHz spectrum map (K) at '+str(int(v[spec_v]))+' m/s',region,on,spec_v)
+            spec_on,spec_reg  = circle(spec_data,spec_head,1,'1720MHz spectrum map (K) at '+str(int(v[spec_v]))+' m/s',region,on,spec_v)
         if off != []:    
             spec_off,spec_reg = circle(spec_data,spec_head,1,'cont_off',region,off,spec_v)
     return spec_on,spec_off,v,spec_reg
@@ -231,7 +233,7 @@ def OH(file,spec_v,region,on):
         spec.close()
         spec_head['CUNIT3'] = 'm/s'           
         v.append(velocity(spec_data,spec_head))
-        spec_on,spec_reg  = circle(spec_data,spec_head,1,'1612MHz spectrum map (K) at '+str(int(v[i][spec_v]))+' m/s',region,on[i],spec_v)
+        spec_on,spec_reg  = circle(spec_data,spec_head,1,'1720MHz channel map at '+str(int(v[i][spec_v]))+' m/s',region,on[i],spec_v)
         T_on.append(np.mean(np.mean(spec_on,axis=1),axis=1))
 #        T_off.append(np.mean(np.mean(spec_off,axis=1),axis=1))
 
@@ -277,8 +279,8 @@ if __name__=='__main__':
                '../data/OH_1665mhz_L49.25_deg.smooth20sec.fits',              \
                '../data/OH_1612mhz_L49.25_deg.smooth20sec.fits']
     region  = [49.15,49.25,-0.4,-0.3]      #region l1,l2,b1,b2
-    on      = ([49.176,-0.327,0.006],[49.208,-0.34,0.012],[49.208,-0.34,0.012],[49.208,-0.34,0.012])
-    off     = [49.208,-0.34,0.012]
+    on      = ([49.176,-0.327,0.007],[49.205,-0.341,0.012],[49.205,-0.341,0.012],[49.205,-0.341,0.012])
+    off     = [49.205,-0.341,0.012]
 #    on      = [49.176,-0.326,0.006]
 #    off     = [49.160,-0.310,0.006] OH1720
     contrast = 1
@@ -292,10 +294,10 @@ if __name__=='__main__':
     l       = 49.2
     b       = -0.7
     #y2lim   = [-1,120]  
-    cont_on,cont_off,cont_reg    = continuum(file1,analyze,region,on,off,contrast)
+#    cont_on,cont_off,cont_reg    = continuum(file1,analyze,region,on,off,contrast)
 #    spec_on,spec_off,v,spec_reg  = spectra(file2,analyze,region,on,off,contrast,spec_v)
 #    absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze)
-#    v,T_on = OH(file4,spec_v,region,on)
+    v,T_on = OH(file4,spec_v,region,on)
 #    v,d = dist(model,file3,l,b,d,V = 254,v_sun = 220,r_sun = 8.5)
     
 

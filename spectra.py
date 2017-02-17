@@ -54,7 +54,7 @@ def velocity(data,head):
     return v
 
 #=============================mapp=============================================
-def mapp(file,region,res,index,v_seq,m,name):
+def mapp(file,region,res,index,v_seq,m,name,beautiful):
     #read continuum data
     cont = fits.open(file[0])
     cont_head = cont[0].header
@@ -89,24 +89,26 @@ def mapp(file,region,res,index,v_seq,m,name):
     cont_on,cont_reg  = box(cont_data,cont_head,region,on[0])
 #    cont_reg = ((cont_reg-np.mean(cont_reg))**2)**0.3+np.mean(cont_reg)*0
     plt.imshow(cont_reg,origin='lower')
-    plt.xlabel('l (deg)')
-    plt.ylabel('b (deg)')
-    cbar = plt.colorbar()
-    cbar.set_label('S (Jy/beam)')
+    if beautiful == 1:
+        plt.xlabel('l (deg)')
+        plt.ylabel('b (deg)')
+        cbar = plt.colorbar()
+        cbar.set_label('S (Jy/beam)')
     #set figure ticks
-    xticks = []
-    yticks = []
-    form = lambda x: "%.2f" % x
-    for i in range(res):
-        xticks.append(form(on[i*res][0]))
-        yticks.append(form(on[i][2]))
-    xticks.append(form(on[-1][1]))
-    yticks.append(form(on[-1][3]))
-    xticks.reverse()
-
-    plt.xticks(np.linspace(0,cont_reg.shape[1]-1,res+1),tuple(xticks))  
-    plt.yticks(np.linspace(0,cont_reg.shape[0]-1,res+1),tuple(yticks))  
-    plt.grid(linestyle='-')
+        xticks = []
+        yticks = []
+        form = lambda x: "%.2f" % x
+        for i in range(res):
+            xticks.append(form(on[i*res][0]))
+            yticks.append(form(on[i][2]))
+        xticks.append(form(on[-1][1]))
+        yticks.append(form(on[-1][3]))
+        xticks.reverse()
+    
+        plt.xticks(np.linspace(0,cont_reg.shape[1]-1,res+1),tuple(xticks))  
+        plt.yticks(np.linspace(0,cont_reg.shape[0]-1,res+1),tuple(yticks))  
+        plt.grid(linestyle='-')
+        plt.title(name)
     
     #get chosen region spectral data and plot it
     big = np.zeros([res,res])
@@ -122,7 +124,7 @@ def mapp(file,region,res,index,v_seq,m,name):
                      (res-j-1)*cont_reg.shape[1]/res,                         \
             T_on[index:]/big[i,j]*cont_reg.shape[0]/res/2+\
             cont_reg.shape[0]/res/2+i*cont_reg.shape[0]/res,color='m')
-    plt.title(name)
+    
     
     plt.show()   
     return cont_reg,v,big
@@ -137,7 +139,8 @@ if __name__=='__main__':
     v_seq    = 'OH'  # H OH
     m        = 0.05  # control the scale of spectra
     name     = '1720 MHz spectra on 1440 MHz continuum'
-    cont_reg,v,big  = mapp(file,region,res,index,v_seq,m,name)
+    beautiful = 1
+    cont_reg,v,big  = mapp(file,region,res,index,v_seq,m,name,beautiful)
 
     
 

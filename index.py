@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from astropy.io import fits
 from astropy.tests import zmf as z
 from scipy.optimize import leastsq
+import copy as cp
 
 #=============================assistant code===================================
 def box(data,head,contrast,name,region,onoff,*args):
