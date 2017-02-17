@@ -58,14 +58,24 @@ def mapp(file,region,res,index,v_seq,m,name,beautiful):
     #read continuum data
     cont = fits.open(file[0])
     cont_head = cont[0].header
-    cont_data = cont[0].data[0,:,:]#*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
+    if cont_head['NAXIS'] == 2:
+        cont_data = cont[0].data[:,:]#*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
+    if cont_head['NAXIS'] == 3:
+        cont_data = cont[0].data[0,:,:]#*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
+    if cont_head['NAXIS'] == 4:
+        cont_data = cont[0].data[0,0,:,:]#*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
+  
     cont.close()
     cont_head['CUNIT3'] = 'm/s'
     
     #read spectral data
     spec = fits.open(file[1])
     spec_head = spec[0].header
-    spec_data = spec[0].data[:,:,:]#*z.conversion(1.4,spec_head['BMAJ'],spec_head['BMIN'])
+    if spec_head['NAXIS'] == 3:
+        spec_data = spec[0].data[:,:,:]#*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
+    if spec_head['NAXIS'] == 4:
+        spec_data = spec[0].data[0,:,:,:]#*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
+  
     spec.close()
     spec_head['CUNIT3'] = 'm/s'
     
