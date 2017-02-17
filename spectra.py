@@ -48,7 +48,7 @@ def velocity(data,head):
         pix = np.linspace(1,data.shape[0],data.shape[0])
         x,y,v   = w.wcs_pix2world(0,0,pix,0)
     if head['NAXIS'] == 4:
-        pix = np.linspace(1,data.shape[1],data.shape[1])
+        pix = np.linspace(1,data.shape[0],data.shape[0])
         x,y,v,s = w.wcs_pix2world(0,0,pix,0,0)
     return v
 
@@ -95,17 +95,17 @@ def mapp(file,region,res,index,v_seq,m,name,on):
     
     
     plt.show()   
-    return spec_on,v
+    return spec_data,v
 
 #===============================main===========================================
 if __name__=='__main__':
-    file     = ['../data/THOR_cont_1440MHz_L49.25deg_25arcsec_image.fits',    \
-                '../data/OH_1720mhz_L49.25_deg.smooth20sec.fits']
+    file     = ['../../../VGPS/VGPS_cont_MOS049.fits',    \
+                '../../../VGPS/MOS_049.Tb.fits']
     region   = [49.15,49.25,-0.4,-0.3]      #region l1,l2,b1,b2
     on       = [49.20,49.21,-0.35,-0.34]    #on 
     res      = 8
     index    = 48
-    v_seq    = 'OH'  # H OH
+    v_seq    = 'H'  # H OH
     m        = 0.05  # control the scale of spectra
     name     = '1720 MHz spectra on 1440 MHz continuum'
     spec_on,v  = mapp(file,region,res,index,v_seq,m,name,on)
