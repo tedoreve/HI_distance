@@ -16,12 +16,11 @@ from astropy.tests import zmf as z
 #=============================assistant code===================================
 #--------------------------------plot------------------------------------------
     
-def box(data,head,region,onoff,*args):
+def box(data,head,region,on,*args):
     '''
     plot box pixel coordinates
     '''  
-    x1,y1,x2,y2 = z.coo_box(head,onoff)  
-    print(data.ndim)
+    x1,y1,x2,y2 = z.coo_box(head,on)  
     if data.ndim == 2:
         result = data[y1:y2,x1:x2]
     if data.ndim == 3:
@@ -86,26 +85,17 @@ def mapp(file,region,res,index,v_seq,m,name,on):
     elif v_seq =='OH':
         v = v/1000
     
-    #get chosen region coordinates in terms of given resolution
-#    deltal = (region[1]-region[0])/res
-#    deltab = (region[3]-region[2])/res
-#    on = []
-#    for i in range(res):
-#        for j in range(res):
-#            on.append([region[0]+deltal*i,region[0]+deltal*(i+1),             \
-#                       region[2]+deltab*j,region[2]+deltab*(j+1)])
     
-    #get chosen region continuum data and plot it
+    #get chosen region continuum and spectral data and plot it
 
     
     cont_on,cont_reg  = box(cont_data,cont_head,region,on)
     spec_on,spec_reg  = box(spec_data,spec_head,region,on,87)
-#    cont_reg = ((cont_reg-np.mean(cont_reg))**2)**0.3+np.mean(cont_reg)*0
     plt.imshow(cont_reg,origin='lower')
     
     
     plt.show()   
-    return spec_on,spec_reg,v
+    return spec_on,v
 
 #===============================main===========================================
 if __name__=='__main__':
@@ -118,7 +108,7 @@ if __name__=='__main__':
     v_seq    = 'OH'  # H OH
     m        = 0.05  # control the scale of spectra
     name     = '1720 MHz spectra on 1440 MHz continuum'
-    spec_on,spec_reg,v  = mapp(file,region,res,index,v_seq,m,name,on)
+    spec_on,v  = mapp(file,region,res,index,v_seq,m,name,on)
 
     
 
