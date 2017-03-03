@@ -95,7 +95,7 @@ def mapp(file,region,res,index,v_seq,m,name,on):
     
     
     plt.show()   
-    return spec_data,v
+    return cont_on,cont_reg
 
 #===============================main===========================================
 if __name__=='__main__':
@@ -108,7 +108,7 @@ if __name__=='__main__':
     v_seq    = 'H'  # H OH
     m        = 0.05  # control the scale of spectra
     name     = '1720 MHz spectra on 1440 MHz continuum'
-    spec_on,v  = mapp(file,region,res,index,v_seq,m,name,on)
+    cont_on,cont_reg  = mapp(file,region,res,index,v_seq,m,name,on)
 
     
 
