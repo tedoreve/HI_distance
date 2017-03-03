@@ -179,24 +179,28 @@ def absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze,method):
             T_off    = (np.sum(np.sum(spec_off,axis=1),axis=1)                    \
                         -(np.sum(np.sum(spec_on,axis=1),axis=1)))                 \
                         /(spec_off.shape[1]*spec_off.shape[2]-spec_on.shape[1]*spec_on.shape[2])
-            e_tau    = (np.mean(np.mean(spec_on,axis=1),axis=1)                 \
-                        -np.mean(np.mean(spec_off,axis=1),axis=1))                \
-                        /(np.mean(cont_on)-np.mean(cont_off))
+            T_con    = np.mean(cont_on)
+            T_coff   = (np.sum(cont_off)-np.sum(cont_on))                         \
+                        /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
+            e_tau    = (T_on-T_off)/(T_con-T_coff)       
         else:
             T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
             T_off    = np.mean(np.mean(spec_off,axis=1),axis=1)
-            e_tau    = (np.mean(np.mean(spec_on,axis=1),axis=1)                 \
-                        -np.mean(np.mean(spec_off,axis=1),axis=1))                \
-                        /(np.mean(cont_on)-np.mean(cont_off))
+            T_con    = np.mean(cont_on)
+            T_coff   = np.mean(cont_off)
+            e_tau    = (T_on-T_off)/(T_con-T_coff)       
+#            e_tau    = (np.mean(np.mean(spec_on,axis=1),axis=1)                 \
+#                        -np.mean(np.mean(spec_off,axis=1),axis=1))                \
+#                        /(np.mean(cont_on)-np.mean(cont_off))
     elif analyze == 'circle':
         T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
         T_off    = (np.sum(np.sum(spec_off,axis=1),axis=1)                    \
                     -(np.sum(np.sum(spec_on,axis=1),axis=1)))                 \
                     /(spec_off.shape[1]*spec_off.shape[2]-spec_on.shape[1]*spec_on.shape[2])
-#        T_con    = np.mean(cont_on)
-#        T_coff   = (np.sum(cont_off)-np.sum(cont_on))                         \
-#                    /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
-        e_tau    = 1+(T_on-T_off)#/(T_con-T_coff)            
+        T_con    = np.mean(cont_on)
+        T_coff   = (np.sum(cont_off)-np.sum(cont_on))                         \
+                    /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
+        e_tau    = 1+(T_on-T_off)/(T_con-T_coff)            
  
     v = v/1000
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
@@ -235,25 +239,25 @@ def dist(model,file,l,b,d,V = 220,v_sun = 220,r_sun = 8.5):
     return v,d   
 #===============================main===========================================
 if __name__=='__main__':
-    file1   = '../data/CONT_49deg_1400mhz_25arc_thor_vgps.fits'
-    file2   = '../data/THOR_HI_with_continuum_L49.25_image.fits'
+    file1   = '../data/CONT_16deg_1400mhz_25arc_thor_vgps.fits'
+    file2   = '../data/THOR_HI_with_continuum_L16.25_image.fits'
     file3   = '../data/rotation_model.txt'
-    region  = [48.8,49.3,-0.9,-0.4]      #region l1,l2,b1,b2
-    on      = [49.15,49.2,-0.8,-0.75] #,[49.205,-0.341,0.012],[49.205,-0.341,0.012],[49.205,-0.341,0.012])
-    off     = [49.25,49.3,-0.9,-0.85]
+    region  = [15.8,15.95,0.1,0.25]      #region l1,l2,b1,b2
+    on      = [15.9,15.92,0.17,0.187] 
+    off     = [15.9,15.94,0.17,0.187]
     contrast = 1
     analyze  = 'box'               # box,circle
     spec_v   = 85
     model   = 'constant'            #constant, model
     V       = 220                   #km/s
     d       = np.linspace(1,40,100)
-    l       = 16.7
-    b       = 0.1
-    method  = ''
+    l       = 15.9
+    b       = 0.2
+    method  = 'classic' #获得吸收谱的方法，tww或者classic
     cont_on,cont_off    = continuum(file1,analyze,region,on,off,contrast)
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze,method)
-    v,d = dist(model,file3,l,b,d,V = 254,v_sun = 220,r_sun = 8.5)
+    v,d = dist(model,file3,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
     
 
 
