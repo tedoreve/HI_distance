@@ -253,7 +253,7 @@ if __name__=='__main__':
     d       = np.linspace(1,40,100)
     l       = 15.9
     b       = 0.2
-    method  = 'classic' #获得吸收谱的方法，tww或者classic
+    method  = 'classic' #the method of getting absorption spectra，‘tww’ or 'tradition'
     cont_on,cont_off    = continuum(file1,analyze,region,on,off,contrast)
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze,method)
