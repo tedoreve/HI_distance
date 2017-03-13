@@ -136,7 +136,7 @@ def continuum(file,analyze,region,on,off,contrast):
     cont_head = cont[0].header
     cont_data = cont[0].data[0,:,:]*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
     cont.close()
-    cont_head['CUNIT3'] = 'Hz'
+    cont_head['CUNIT3'] = 'm/s'
     
     z.plot_fits(cont_data,cont_head,1,'origin')
     
@@ -182,7 +182,7 @@ def absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze,method):
             T_con    = np.mean(cont_on)
             T_coff   = (np.sum(cont_off)-np.sum(cont_on))                         \
                         /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
-            e_tau    = (T_on-T_off)/(T_con-T_coff)       
+            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)       
         else:
             T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
             T_off    = np.mean(np.mean(spec_off,axis=1),axis=1)
@@ -239,12 +239,12 @@ def dist(model,file,l,b,d,V = 220,v_sun = 220,r_sun = 8.5):
     return v,d   
 #===============================main===========================================
 if __name__=='__main__':
-    file1   = '../data/CONT_16deg_1400mhz_25arc_thor_vgps.fits'
-    file2   = '../data/THOR_HI_with_continuum_L16.25_image.fits'
+    file1   = '../data/THOR_cont_1440MHz_L16.25deg_25arcsec_image.fits'
+    file2   = '../data/THOR_HI_without_continuum_L16.25.fits'
     file3   = '../data/rotation_model.txt'
-    region  = [15.8,15.95,0.1,0.25]      #region l1,l2,b1,b2
-    on      = [15.9,15.92,0.17,0.187] 
-    off     = [15.9,15.94,0.17,0.187]
+    region  = [16.65,16.8,0.0,0.15]      #region l1,l2,b1,b2
+    on      = [16.707,16.72,0.052,0.065] 
+    off     = [16.69,16.72,0.04,0.065]
     contrast = 1
     analyze  = 'box'               # box,circle
     spec_v   = 85
@@ -253,7 +253,7 @@ if __name__=='__main__':
     d       = np.linspace(1,40,100)
     l       = 15.9
     b       = 0.2
-    method  = 'classic' #the method of getting absorption spectra，‘tww’ or 'tradition'
+    method  = 'tww' #获得吸收谱的方法，tww或者classic
     cont_on,cont_off    = continuum(file1,analyze,region,on,off,contrast)
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze,method)
