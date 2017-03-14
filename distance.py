@@ -134,7 +134,10 @@ def mod(file):
 def continuum(file,analyze,region,on,off,contrast):
     cont = fits.open(file)
     cont_head = cont[0].header
-    cont_data = cont[0].data[0,:,:]*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
+    if cont_head['BUNIT'] == 'K':
+        cont_data = cont[0].data[0,:,:]
+    else:
+        cont_data = cont[0].data[0,:,:]*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
     cont.close()
     cont_head['CUNIT3'] = 'm/s'
     
@@ -154,7 +157,10 @@ def continuum(file,analyze,region,on,off,contrast):
 def spectra(file,analyze,region,on,off,contrast,spec_v):
     spec = fits.open(file)
     spec_head = spec[0].header
-    spec_data = spec[0].data[:,:,:]*z.conversion(1.4,spec_head['BMAJ'],spec_head['BMIN'])
+    if spec_head['BUNIT'] == 'K':
+        spec_data = spec[0].data[:,:,:]
+    else:
+        spec_data = spec[0].data[:,:,:]*z.conversion(1.4,spec_head['BMAJ'],spec_head['BMIN'])
     spec.close()
     spec_head['CUNIT3'] = 'm/s'
         
@@ -241,7 +247,8 @@ def dist(model,file,l,b,d,V = 220,v_sun = 220,r_sun = 8.5):
 if __name__=='__main__':
     file1   = '../data/THOR_cont_1440MHz_L16.25deg_25arcsec_image.fits'
     file2   = '../data/THOR_HI_without_continuum_L16.25.fits'
-    file3   = '../data/rotation_model.txt'
+    file3   = '../data/grs-16-cube.fits'
+    file4   = '../data/rotation_model.txt'
     region  = [16.65,16.8,0.0,0.15]      #region l1,l2,b1,b2
     on      = [16.707,16.72,0.052,0.065] 
     off     = [16.69,16.72,0.04,0.065]
@@ -254,10 +261,11 @@ if __name__=='__main__':
     l       = 15.9
     b       = 0.2
     method  = 'tww' #获得吸收谱的方法，tww或者classic
-    cont_on,cont_off    = continuum(file1,analyze,region,on,off,contrast)
-    spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
-    absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze,method)
-    v,d = dist(model,file3,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+#    cont_on,cont_off    = continuum(file1,analyze,region,on,off,contrast)
+#    spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
+    spec_on2,spec_off2,v2  = spectra(file3,analyze,region,on,off,contrast,spec_v)
+#    absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze,method)
+    v,d = dist(model,file4,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
     
 
 
