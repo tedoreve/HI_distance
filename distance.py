@@ -134,7 +134,9 @@ def mod(file):
 def continuum(file,analyze,region,on,off,contrast):
     cont = fits.open(file)
     cont_head = cont[0].header
-    if cont_head['BUNIT'] == 'K':
+    if cont_head['BUNIT'] == 'K' and cont_head['NAXIS'] == 4:
+        cont_data = cont[0].data[0,0,:,:]
+    elif cont_head['BUNIT'] == 'K' and cont_head['NAXIS'] == 3:
         cont_data = cont[0].data[0,:,:]
     else:
         cont_data = cont[0].data[0,:,:]*z.conversion(1.4,cont_head['BMAJ'],cont_head['BMIN'])
@@ -157,7 +159,9 @@ def continuum(file,analyze,region,on,off,contrast):
 def spectra(file,analyze,region,on,off,contrast,spec_v):
     spec = fits.open(file)
     spec_head = spec[0].header
-    if spec_head['BUNIT'] == 'K':
+    if spec_head['BUNIT'] == 'K' and spec_head['NAXIS'] == 4:
+        spec_data = spec[0].data[0,:,:,:]
+    elif spec_head['BUNIT'] == 'K' and spec_head['NAXIS'] == 3:
         spec_data = spec[0].data[:,:,:]
     else:
         spec_data = spec[0].data[:,:,:]*z.conversion(1.4,spec_head['BMAJ'],spec_head['BMIN'])
@@ -176,22 +180,27 @@ def spectra(file,analyze,region,on,off,contrast,spec_v):
             spec_on,spec_reg  = circle(spec_data,spec_head,1,'1720MHz spectrum map (K) at '+str(int(v[spec_v]))+' m/s',region,on,spec_v)
         if off != []:    
             spec_off,spec_reg = circle(spec_data,spec_head,1,'spec_off',region,off,spec_v)
+    
     return spec_on,spec_off,v
 #=============================absorption=======================================
-def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,cont_on,cont_off,on,off,analyze,method): 
+def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,spec_off_vgps,v_vgps,cont_on,cont_off,cont_on_vgps,cont_off_vgps,on,off,analyze,method): 
     if analyze   == 'box':
         if method == 'tww':
             T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
             T_off    = (np.sum(np.sum(spec_off,axis=1),axis=1)                    \
                         -(np.sum(np.sum(spec_on,axis=1),axis=1)))                 \
                         /(spec_off.shape[1]*spec_off.shape[2]-spec_on.shape[1]*spec_on.shape[2])
-            T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
-#            T_off_co = (np.sum(np.sum(spec_off_co,axis=1),axis=1)                    \
-#                        -(np.sum(np.sum(spec_on_co,axis=1),axis=1)))                 \
-#                        /(spec_off_co.shape[1]*spec_off_co.shape[2]-spec_on_co.shape[1]*spec_on_co.shape[2])
+            
             T_con    = np.mean(cont_on)
             T_coff   = (np.sum(cont_off)-np.sum(cont_on))                         \
                         /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
+                        
+            T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
+            T_on_vgps= np.mean(np.mean(spec_on_vgps-cont_on_vgps,axis=1),axis=1)
+#            T_off_co = (np.sum(np.sum(spec_off_co,axis=1),axis=1)                    \
+#                        -(np.sum(np.sum(spec_on_co,axis=1),axis=1)))                 \
+#                        /(spec_off_co.shape[1]*spec_off_co.shape[2]-spec_on_co.shape[1]*spec_on_co.shape[2])
+
             e_tau    = 1+(T_on-T_off)/(T_con-T_coff)       
         else:
             T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
@@ -212,35 +221,46 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,cont_on,cont_
                     /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
         e_tau    = 1+(T_on-T_off)/(T_con-T_coff)            
  
-    v    = v/1000
-    v_co = v_co/1000
+    v     = v/1000
+    v_co  = v_co/1000
+    v_vgps= v_vgps/1000
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
-    ax1.plot(v[70:], T_on[70:],label='HI_on')
-    ax1.plot(v[70:], T_off[70:],label='HI_off')
-    ax1.set_ylabel('T(K)')
+    x1 = ax1.plot(v[75:200], T_on[75:200])
+    x2 = ax1.plot(v[75:200], T_off[75:200])
+    ax4= ax1.twinx()
+    x4 = ax4.plot(v_vgps,T_on_vgps,color='r')
+    
+    xx = x1 + x2 +x4
+    labs = ['HI_on','HI_off','HI_VGPS']
+
     props = font_manager.FontProperties(size=10)
-    ax1.legend(loc='lower right', shadow=True, fancybox=True, prop=props)
+    ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)
+    
+    ax1.set_ylabel('T(K)')
+    ax4.set_ylabel('T(K)')
     ax1.set_title('Spectrum of G15.9+0.2')
 #    ax1.set_ylim(y2lim[0],y2lim[1])
 
-    lns2 = ax2.plot(v[70:], e_tau[70:])
+    lns2 = ax2.plot(v[75:200], e_tau[75:200])
+    ax2.plot(v[75:200],[1]*len(v[75:200]),'--')
     ax3  = ax2.twinx()
-    lns3 = ax3.plot(v_co[:], T_on_co[:],color='r')
+    lns3 = ax3.plot(v_co, T_on_co,color='r')
     
     lns = lns2 + lns3
     labs = ['HI','CO']
-    ax2.legend(lns, labs, loc='lower right', shadow=True, fancybox=True, prop=props)
+    ax2.legend(lns, labs, loc='lower right', shadow=True, prop=props)
     
+    ax2.set_xlim(v[75],v[199])
     ax2.set_ylabel(r'$e^{-\tau}$',fontsize=15)
     ax2.set_xlabel('velocity(km/s)')
     ax3.set_ylabel('T(K)')
 #    ax3.tick_params('y')
     
 #    ax2.plot(v_co[70:], T_off_co[70:],label='off')
-#    ax2.set_xlim(xlim[0],xlim[1])
+
 #    ax2.set_ylim(ylim[0],ylim[1])
     fig.subplots_adjust(hspace=0.05)
-    plt.legend()
+#    plt.legend()
     plt.show()   
 
 #=============================distance=========================================    
@@ -265,10 +285,13 @@ if __name__=='__main__':
     file1   = '../data/THOR_cont_1440MHz_L16.25deg_25arcsec_image.fits'
     file2   = '../data/THOR_HI_without_continuum_L16.25.fits'
     file3   = '../data/grs-16-cube.fits'
-    file4   = '../data/rotation_model.txt'
+    file4   = '../data/MOS_017.Tb.fits'
+    file5   = '../data/VGPS_cont_MOS017.fits'
+    file6   = '../data/rotation_model.txt'
     region  = [15.8,15.95,0.1,0.25]      #region l1,l2,b1,b2
-    on      = [15.9,15.92,0.16,0.18] 
-    off     = [15.9,15.94,0.16,0.18]
+    on      = [15.9,15.92,0.16,0.19] 
+    off     = [15.9,15.94,0.16,0.19]
+    on_co   = [15.88,15.94,0.14,0.2]
     contrast = 1
     analyze  = 'box'               # box,circle
     spec_v   = 85
@@ -280,9 +303,11 @@ if __name__=='__main__':
     method  = 'tww' #获得吸收谱的方法，tww或者classic
     cont_on,cont_off    = continuum(file1,analyze,region,on,off,contrast)
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
-    spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,region,off,contrast,spec_v)
-    absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,cont_on,cont_off,on,off,analyze,method)
-    v,d = dist(model,file4,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+    spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on_co,off,contrast,spec_v)
+    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
+    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
+    absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,spec_off_vgps,v_vgps,cont_on,cont_off,cont_on_vgps,cont_off_vgps,on,off,analyze,method)
+    v0,d0 = dist(model,file6,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
     
 
 
