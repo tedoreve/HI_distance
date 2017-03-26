@@ -142,7 +142,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
 
 #============================ distance ========================================    
 
-def dist(model,file,l,b,d,V = 220,v_sun = 220,r_sun = 8.5):
+def dist(file,l,b,d,V = 220,v_sun = 220,r_sun = 8.5):
     b = np.deg2rad(b)
     l = np.deg2rad(l)
     r = (r_sun**2+(d*np.cos(b))**2-2*r_sun*d*np.cos(b)*np.cos(l))**0.5
@@ -181,7 +181,6 @@ if __name__=='__main__':
     contrast = 1
     analyze  = 'box'               # box,circle
     spec_v   = 87
-    model   = 'constant'            #constant, model
     V       = 220                   #km/s
     d       = np.linspace(1,40,100)
     l       = 15.9
@@ -192,7 +191,7 @@ if __name__=='__main__':
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on_co,off,contrast,122)
     #v_co[120:125] T=np.sum(spec_on_co[120:125],axis=0)
-    v0,d0 = dist(model,file6,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+    v0,d0 = dist(file6,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
 #    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     v,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method)
