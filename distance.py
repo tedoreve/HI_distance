@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Oct 19 08:58:41 2016
-
 @author: tedoreve
 """
 
@@ -35,7 +34,8 @@ def continuum(file,analyze,region,on,off,contrast):
     elif analyze == 'circle':
             cont_on,cont_reg  = z.circle(cont_data,cont_head,1,region,on)
             cont_off,cont_reg = z.circle(cont_data,cont_head,1,region,off)
-    return cont_on,cont_off
+#    z.con(cont_reg,cont_head,region,levels=[5,10,20,60,100,140])
+    return cont_on,cont_off,cont_reg
 
 #============================ spectra =========================================
 def spectra(file,analyze,region,on,off,contrast,spec_v):
@@ -105,6 +105,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     x1 = ax1.plot(v , T_on )
     x2 = ax1.plot(v , T_off )
     ax1.plot([138]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
+    ax1.plot([21]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
 #    ax4= ax1.twinx()
 #    x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
     xx = x1 + x2
@@ -113,11 +114,12 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
     ax1.set_ylabel('T(K)')
 #    ax4.set_ylabel('T(K)')
-    ax1.set_title('Spectrum of G15.9+0.2')
+    ax1.set_title('Spectra of G15.9+0.2')
 #    ax1.set_ylim(y2lim[0],y2lim[1])
     x1 = ax2.plot(v , e_tau )
     ax2.plot(v ,[1]*len(v ),'--',color='purple')
     ax2.plot([138]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
+    ax2.plot([21]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
     
@@ -128,7 +130,9 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     ax22.set_ylabel('T(K)')    
     ax3.plot(v0,d0)
     ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
+    ax3.plot(v[0:99] ,[14]*len(v[0:99]),'--',color='purple')
     ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+    ax3.plot([21]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.set_xlabel('velocity(km/s)')
     ax3.set_ylabel('distance(kpc)')
     ax3.set_xlim(v[75],v[199])
@@ -139,33 +143,6 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     plt.show()
     
     return v,e_tau
-
-#============================ distance ========================================    
-
-def dist(file,l,b,d,V = 220,v_sun = 220,r_sun = 8.5):
-    b = np.deg2rad(b)
-    l = np.deg2rad(l)
-    r = (r_sun**2+(d*np.cos(b))**2-2*r_sun*d*np.cos(b)*np.cos(l))**0.5
-    v = V*r_sun*np.sin(l)*np.cos(b)/r-v_sun*np.sin(l)*np.cos(b) 
-    return v,d   
-#============================ contour map =====================================
-
-def con(data,head,region,levels):
-    '''
-    plot box pixel coordinates
-    '''
-    l1,l2,b1,b2 = region  
-    x1,y1,x2,y2 = z.coo_box(head,region)
-    
-    plt.subplots() 
-    plt.contour(data,levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
-    plt.colorbar()
-    plt.xlabel(r'$l (deg)$')
-    plt.ylabel(r'$b (deg)$')    
-    
-    plt.xlim(l2,l1)
-    plt.ylim(b1,b2)
-    plt.grid()    
 #===============================main===========================================
 if __name__=='__main__':
     file1   = '../data/THOR_cont_1440MHz_L16.25deg_25arcsec_image.fits'
@@ -181,21 +158,18 @@ if __name__=='__main__':
     contrast = 1
     analyze  = 'box'               # box,circle
     spec_v   = 87
+    model   = 'constant'            #constant, model
     V       = 220                   #km/s
     d       = np.linspace(1,40,100)
     l       = 15.9
     b       = 0.2
-    method  = 'tww' #获得吸收谱的方法，tww或者classic
+    method  = 'tww' #the way to get absorption spectrum，'tww' or 'classic'
     levels=[5,10,20,60,100,140]
-    cont_on,cont_off    = continuum(file1,analyze,region,on,off,contrast)
+    cont_on,cont_off,cont_reg    = continuum(file1,analyze,region,on,off,contrast)
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
-    spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on_co,off,contrast,122)
+    spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
     #v_co[120:125] T=np.sum(spec_on_co[120:125],axis=0)
-    v0,d0 = dist(file6,l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+    v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
 #    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     v,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method)
-    
-    
-
-
