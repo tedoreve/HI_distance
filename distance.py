@@ -129,6 +129,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
     ax2.set_ylabel(r'$e^{-\tau}$',fontsize=15) 
     ax22.set_ylabel('T(K)')    
+    
     ax3.plot(v0,d0)
     ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
     ax3.plot(v[0:99] ,[14]*len(v[0:99]),'--',color='purple')
@@ -175,6 +176,3 @@ if __name__=='__main__':
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     v,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method)
     
-    
-
-
