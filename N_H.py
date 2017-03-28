@@ -9,11 +9,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from astropy import units as un
 from astropy import constants as con
-
-e_t = e_tau.clip(min=1e-32)
+from astropy.modeling import models, fitting
+e_t = e_tau.clip(min=0.01)
 x   = v
 y   = -np.log(e_t)
-T_s = 50
+T_s = 100
 S   = 0
 for i in y:
     S = S + i*1.5
@@ -38,7 +38,7 @@ M_H2 = N_H2*theta1*theta2*d.to('cm').value**2*2*con.m_p.value/con.M_sun.value
 print(M_H2)
 
 r=12*un.pc
-n=5.1e22/r.to('cm').value
+n=2.8e22/r.to('cm').value
            
 print(n)
 
@@ -54,3 +54,18 @@ for i in range(1001):
 S=S*un.TeV
 print(S.to('erg').value*4*np.pi*d.to('cm').value**2)
 print(S.to('erg').value*4*np.pi*d.to('cm').value**2*t)
+
+#T=np.sum(spec_on_co[120:125],axis=0)
+#plt.imshow(T,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+#cbar = plt.colorbar()
+#cbar.set_label('T(K)')
+#plt.contour(cont_reg,levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+#plt.xlabel('l(deg)')
+#plt.ylabel('b(deg)')
+#onoff = [15.91,0.09,0.01]
+#an = np.linspace(0, 2*np.pi, 100)
+#plt.plot(onoff[2]*np.cos(an)+onoff[0], onoff[2]*np.sin(an)+onoff[1],'r')
+#onoff = [15.91,0.09,0.2]
+#plt.plot(onoff[2]*np.cos(an)+onoff[0], onoff[2]*np.sin(an)+onoff[1],'pink')
+#plt.xlim(l2,l1)
+#plt.ylim(b1,b2)
