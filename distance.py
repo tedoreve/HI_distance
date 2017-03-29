@@ -36,7 +36,7 @@ def continuum(file,analyze,region,on,off,contrast):
             cont_on,cont_reg  = z.circle(cont_data,cont_head,1,region,on)
             cont_off,cont_reg = z.circle(cont_data,cont_head,1,region,off)
 #    z.con(cont_reg,cont_head,region,levels=[5,10,20,60,100,140])
-    return cont_on,cont_head,cont_reg
+    return cont_on,cont_off,cont_reg
 
 #============================ spectra =========================================
 def spectra(file,analyze,region,on,off,contrast,spec_v):
@@ -64,7 +64,7 @@ def spectra(file,analyze,region,on,off,contrast,spec_v):
         if off != []:    
             spec_off,spec_reg = z.circle(spec_data,spec_head,1,region,off,spec_v)
     
-    return spec_reg,spec_off,v
+    return spec_on,spec_off,v
 #============================ absorption ======================================
 def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method): 
     if analyze   == 'box':
@@ -174,5 +174,5 @@ if __name__=='__main__':
     v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
 #    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
-#    T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method)
+    T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method)
     
