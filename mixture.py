@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Oct 19 08:58:41 2016
-
 @author: tedoreve
 """
 
@@ -299,6 +298,3 @@ if __name__=='__main__':
 #    absorption_spec(spec_on,spec_off,v,cont_on,cont_off,on,off,analyze)
     v,T_on = OH(file4,spec_v,region,on)
 #    v,d = dist(model,file3,l,b,d,V = 254,v_sun = 220,r_sun = 8.5)
-    
-
-

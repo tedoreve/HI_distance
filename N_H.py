@@ -38,7 +38,7 @@ M_H2 = N_H2*theta1*theta2*d.to('cm').value**2*2*con.m_p.value/con.M_sun.value
 print(M_H2)
 
 r=12*un.pc
-n=(N_HI + N_H2)/r.to('cm').value
+n=(N_HI + N_H2)/r.to('cm').value/2
            
 print(n)
 
