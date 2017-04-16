@@ -32,11 +32,6 @@ def continuum(file,analyze,region,on,off,contrast):
             cont_on,cont_reg  = z.box(cont_data,cont_head,1,region,on)
         if off != []:
             cont_off,cont_reg = z.box(cont_data,cont_head,1,region,off)
-    if analyze == 'tri':
-        if on != []:
-            cont_on,cont_reg  = z.tri(cont_data,cont_head,1,region,on)
-        if off != []:
-            cont_off,cont_reg = z.box(cont_data,cont_head,1,region,off)
     elif analyze == 'circle':
             cont_on,cont_reg  = z.circle(cont_data,cont_head,1,region,on)
             cont_off,cont_reg = z.circle(cont_data,cont_head,1,region,off)
@@ -63,18 +58,13 @@ def spectra(file,analyze,region,on,off,contrast,spec_v):
             spec_on,spec_reg  = z.box(spec_data,spec_head,1,region,on,spec_v)
         if off != []:    
             spec_off,spec_reg = z.box(spec_data,spec_head,1,region,off,spec_v)
-    if analyze == 'tri':
-        if on != []:
-            spec_on,spec_reg  = z.tri(spec_data,spec_head,1,region,on,spec_v)
-        if off != []:    
-            spec_off,spec_reg = z.box(spec_data,spec_head,1,region,off,spec_v)
     elif analyze == 'circle':
         if on != []:
             spec_on,spec_reg  = z.circle(spec_data,spec_head,1,region,on,spec_v)
         if off != []:    
             spec_off,spec_reg = z.circle(spec_data,spec_head,1,region,off,spec_v)
     
-    return spec_on,spec_off,spec_reg,v
+    return spec_on,spec_off,v
 #============================ absorption ======================================
 def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method): 
     if analyze   == 'box':
@@ -95,50 +85,17 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
             T_off    = np.mean(np.mean(spec_off,axis=1),axis=1)
             T_con    = np.mean(cont_on)
             T_coff   = np.mean(cont_off)
-            T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
-            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)     
-    
-    if analyze   == 'tri':
-        if method == 'tww':
-            T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
-            T_off    = (np.sum(np.sum(spec_off,axis=1),axis=1)                    \
-                        -(np.sum(np.sum(spec_on,axis=1),axis=1)))                 \
-                        /(spec_off.shape[1]*spec_off.shape[2]-spec_on.shape[1]*spec_on.shape[2])
-            
-            T_con    = np.mean(cont_on)
-            T_coff   = (np.sum(cont_off)-np.sum(cont_on))                         \
-                        /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
-                        
-            T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
-            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)       
-        else:
-            T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
-            T_off    = np.mean(np.mean(spec_off,axis=1),axis=1)
-            T_con    = np.mean(cont_on)
-            T_coff   = np.mean(cont_off)
-            T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
-            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)
+            e_tau    = (T_on-T_off)/(T_con-T_coff)       
             
     elif analyze == 'circle':
-        if method == 'tww':
-            T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
-            T_off    = (np.sum(np.sum(spec_off,axis=1),axis=1)                    \
-                        -(np.sum(np.sum(spec_on,axis=1),axis=1)))                 \
-                        /(spec_off.shape[1]*spec_off.shape[2]-spec_on.shape[1]*spec_on.shape[2])
-            
-            T_con    = np.mean(cont_on)
-            T_coff   = (np.sum(cont_off)-np.sum(cont_on))                         \
-                        /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
-                        
-            T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
-            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)       
-        else:
-            T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
-            T_off    = np.mean(np.mean(spec_off,axis=1),axis=1)
-            T_con    = np.mean(cont_on)
-            T_coff   = np.mean(cont_off)
-            T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
-            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)        
+        T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
+        T_off    = (np.sum(np.sum(spec_off,axis=1),axis=1)                    \
+                    -(np.sum(np.sum(spec_on,axis=1),axis=1)))                 \
+                    /(spec_off.shape[1]*spec_off.shape[2]-spec_on.shape[1]*spec_on.shape[2])
+        T_con    = np.mean(cont_on)
+        T_coff   = (np.sum(cont_off)-np.sum(cont_on))                         \
+                    /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
+        e_tau    = 1+(T_on-T_off)/(T_con-T_coff)            
  
     v     = v/1000
     v_co  = v_co/1000
@@ -148,8 +105,8 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     
     x1 = ax1.plot(v , T_on )
     x2 = ax1.plot(v , T_off )
-#    ax1.plot([138]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
-#    ax1.plot([64]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
+    ax1.plot([138]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
+    ax1.plot([21]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
 #    ax4= ax1.twinx()
 #    x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
     xx = x1 + x2
@@ -157,14 +114,13 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     props = font_manager.FontProperties(size=10)
     ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
     ax1.set_ylabel('T(K)')
-#    ax1.set_ylim(-40,15)
 #    ax4.set_ylabel('T(K)')
-    ax1.set_title('G16.7+0.1')
+    ax1.set_title('Spectra of G15.9+0.2')
 #    ax1.set_ylim(y2lim[0],y2lim[1])
     x1 = ax2.plot(v , e_tau )
     ax2.plot(v ,[1]*len(v ),'--',color='purple')
-#    ax2.plot([138]*len(np.arange(-1,1.7,0.05)),np.arange(-1,1.7,0.05),'--',color='purple')
-#    ax2.plot([64]*len(np.arange(-1,1.7,0.05)),np.arange(-1,1.7,0.05),'--',color='purple')
+    ax2.plot([138]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
+    ax2.plot([21]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
     
@@ -173,20 +129,19 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
     ax2.set_ylabel(r'$e^{-\tau}$',fontsize=15) 
     ax22.set_ylabel('T(K)')    
-    ax2.set_ylim(-0.7,1.8)
     
     ax3.plot(v0,d0)
-#    ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
-#    ax3.plot(v[0:130] ,[11.3]*len(v[0:130]),'--',color='purple')
-#    ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
-#    ax3.plot([64]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+    ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
+    ax3.plot(v[0:99] ,[14]*len(v[0:99]),'--',color='purple')
+    ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+    ax3.plot([21]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.set_xlabel('velocity(km/s)')
     ax3.set_ylabel('distance(kpc)')
-    ax3.set_xlim(v[75],v[199])
+    ax3.set_xlim(0,170)
     ax3.set_ylim(0,20)
     
     
-    fig.subplots_adjust(hspace=0.0)
+    fig.subplots_adjust(hspace=0.05)
     plt.show()
     
     return T_on_co,e_tau
@@ -194,30 +149,28 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
 if __name__=='__main__':
     file1   = '../data/THOR_cont_1440MHz_L16.25deg_25arcsec_image.fits'
     file2   = '../data/THOR_HI_without_continuum_L16.25.fits'
-    file3   = '../data/grs-16-cube.fits'
-    file4   = '../data/MOS_017.Tb.fits'
-    file5   = '../data/VGPS_cont_MOS017.fits'
+    file3   = '../../data/grs-16-cube.fits'
+    file4   = '../../data/MOS_017.Tb.fits'
+    file5   = '../../data/VGPS_cont_MOS017.fits'
     file6   = '../data/rotation_model.txt'
-    region  = [16.68,16.8,0.02,0.14]      #region l1,l2,b1,b2
-#    on      = [16.72,0.046,16.701,0.068,16.72,0.068] 
-#    off     = [16.718,0.02,16.68,0.066,16.718,0.066] 
-    on      = [16.709,16.715,0.057,0.066]
-    off     = [16.681,16.715,0.021,0.066]
-#    on_co   = [15.88,15.94,0.14,0.2]
+    region  = [15.8,16.1,0.0,0.3]      #region l1,l2,b1,b2
+    on      = [15.83,15.95,0.1,0.25] 
+    off     = [15.83,16.1,0.1,0.25]
+    on_co   = [15.88,15.94,0.14,0.2]
     contrast = 1
-    analyze  = 'box'               # box,tri(caution!!),circle
-    spec_v   = 103
+    analyze  = 'box'               # box,circle
+    spec_v   = 87
     model   = 'constant'            #constant, model
     V       = 220                   #km/s
     d       = np.linspace(1,40,100)
     l       = 15.9
     b       = 0.2
     method  = 'tww' #the way to get absorption spectrum，'tww' or 'classic'
-#    levels=[5,10,20,60,100,140]
-    cont_on,cont_off,cont_reg    = continuum(file1,analyze,region,on,off,contrast)
-    spec_on,spec_off,spec_reg,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
-    spec_on_co,spec_off_co,spec_reg,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
-####    #v_co[120:125] T=np.sum(spec_reg[120:125],axis=0)
+    levels=[5,10,20,60,100,140]
+    cont_on,cont_off,cont_reg    = continuum(file5,analyze,region,on,off,contrast)
+    spec_on,spec_off,v  = spectra(file4,analyze,region,on,off,contrast,spec_v)
+    spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
+    #v_co[120:125] T=np.sum(spec_on_co[120:125],axis=0)
     v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
 #    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)

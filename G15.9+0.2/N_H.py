@@ -24,7 +24,7 @@ print(N_HI)
 x = v_co
 y = T_on_co
 S   = 0
-for i in y:
+for i in y[0:600]:
     S = S + i*0.21
 N_H2 = 1.8e20*S*30
 
@@ -37,8 +37,8 @@ M_H2 = N_H2*theta1*theta2*d.to('cm').value**2*2*con.m_p.value/con.M_sun.value
                               
 print(M_H2)
 
-r=12*un.pc
-n=(N_HI + N_H2)/r.to('cm').value/2
+S=6*un.pc
+n=N_H2/S.to('cm').value
            
 print(n)
 
