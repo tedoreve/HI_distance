@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
 #matplotlib.use('Agg')
 from astropy.io import fits
-from astropy.tests import zmf as z
+import zmf as z
  
 #============================ continuum =======================================
 def continuum(file,analyze,region,on,off,contrast):
