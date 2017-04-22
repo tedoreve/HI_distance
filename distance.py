@@ -201,12 +201,12 @@ if __name__=='__main__':
     region  = [16.68,16.8,0.02,0.14]      #region l1,l2,b1,b2
 #    on      = [16.72,0.046,16.701,0.068,16.72,0.068] 
 #    off     = [16.718,0.02,16.68,0.066,16.718,0.066] 
-    on      = [16.709,16.715,0.057,0.066]
-    off     = [16.681,16.715,0.021,0.066]
+    on      = [16.71,16.72,0.055,0.07]
+    off     = [16.681,16.72,0.021,0.07]
 #    on_co   = [15.88,15.94,0.14,0.2]
     contrast = 1
     analyze  = 'box'               # box,tri(caution!!),circle
-    spec_v   = 103
+    spec_v   = 106
     model   = 'constant'            #constant, model
     V       = 220                   #km/s
     d       = np.linspace(1,40,100)
@@ -216,7 +216,7 @@ if __name__=='__main__':
 #    levels=[5,10,20,60,100,140]
     cont_on,cont_off,cont_reg    = continuum(file1,analyze,region,on,off,contrast)
     spec_on,spec_off,spec_reg,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
-    spec_on_co,spec_off_co,spec_reg,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
+    spec_on_co,spec_off_co,spec_reg_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
 ####    #v_co[120:125] T=np.sum(spec_reg[120:125],axis=0)
     v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
 #    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
