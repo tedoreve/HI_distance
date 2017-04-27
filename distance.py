@@ -149,7 +149,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     x1 = ax1.plot(v , T_on )
     x2 = ax1.plot(v , T_off )
 #    ax1.plot([138]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
-#    ax1.plot([64]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
+    ax1.plot([20]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
 #    ax4= ax1.twinx()
 #    x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
     xx = x1 + x2
@@ -164,7 +164,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     x1 = ax2.plot(v , e_tau )
     ax2.plot(v ,[1]*len(v ),'--',color='purple')
 #    ax2.plot([138]*len(np.arange(-1,1.7,0.05)),np.arange(-1,1.7,0.05),'--',color='purple')
-#    ax2.plot([64]*len(np.arange(-1,1.7,0.05)),np.arange(-1,1.7,0.05),'--',color='purple')
+    ax2.plot([20]*len(np.arange(-1,1.7,0.05)),np.arange(-1,1.7,0.05),'--',color='purple')
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
     
@@ -172,14 +172,15 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on
     labs = ['HI','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
     ax2.set_ylabel(r'$e^{-\tau}$',fontsize=15) 
-    ax22.set_ylabel('T(K)')    
+    ax22.set_ylabel('T(K)')   
+    ax22.set_ylim(-0.2,1.5)
     ax2.set_ylim(-0.7,1.8)
     
     ax3.plot(v0,d0)
 #    ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
-#    ax3.plot(v[0:130] ,[11.3]*len(v[0:130]),'--',color='purple')
+    ax3.plot(v[0:99] ,[14]*len(v[0:99]),'--',color='purple')
 #    ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
-#    ax3.plot([64]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+    ax3.plot([20]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.set_xlabel('velocity(km/s)')
     ax3.set_ylabel('distance(kpc)')
     ax3.set_xlim(v[75],v[199])
@@ -214,11 +215,11 @@ if __name__=='__main__':
     b       = 0.2
     method  = 'tww' #the way to get absorption spectrum，'tww' or 'classic'
 #    levels=[5,10,20,60,100,140]
-    cont_on,cont_off,cont_reg    = continuum(file1,analyze,region,on,off,contrast)
-    spec_on,spec_off,spec_reg,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
-    spec_on_co,spec_off_co,spec_reg_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
-####    #v_co[120:125] T=np.sum(spec_reg[120:125],axis=0)
-    v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+#    cont_on,cont_off,cont_reg    = continuum(file1,analyze,region,on,off,contrast)
+#    spec_on,spec_off,spec_reg,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
+#    spec_on_co,spec_off_co,spec_reg_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
+#####    #v_co[120:125] T=np.sum(spec_reg[120:125],axis=0)
+#    v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
 #    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method)
