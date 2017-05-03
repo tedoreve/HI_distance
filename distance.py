@@ -208,7 +208,7 @@ if __name__=='__main__':
     file4   = '../data/OH_1720mhz_L16.25_deg.fits'
     file5   = '../data/VGPS_cont_MOS017.fits'
     file6   = '../data/rotation_model.txt'
-    region  = [16.68,16.8,0.02,0.14]      #region l1,l2,b1,b2
+    region  = [16.66,16.81,-0.03,0.19]      #region l1,l2,b1,b2
 #    on      = [16.72,0.046,16.701,0.068,16.72,0.068] 
 #    off     = [16.718,0.02,16.68,0.066,16.718,0.066] 
     on      = [16.703,16.723,0.053,0.073]
@@ -223,7 +223,7 @@ if __name__=='__main__':
     l       = 15.9
     b       = 0.2
     method  = 'tww' #the way to get absorption spectrum，'tww' or 'classic'
-#    levels=[5,10,20,60,100,140]
+    
 #fig.subplots_adjust(top=0.98,bottom=0.1,left=0.07,right=1.0)
     cont_on,cont_off,cont_reg    = continuum(file1,analyze,region,on,off,contrast)
     spec_on,spec_off,spec_reg,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
