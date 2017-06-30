@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
 #matplotlib.use('Agg')
 from astropy.io import fits
-from astropy.tests import zmf as z
+import zmf as z
  
 #============================ continuum =======================================
 def continuum(file,analyze,region,on,off,contrast):
@@ -164,6 +164,7 @@ if __name__=='__main__':
     on      = [15.9,15.92,0.16,0.19] 
     off     = [15.9,15.94,0.16,0.19]
     on_VGPS = [15.83,15.95,0.1,0.25]
+    off_VGPS= [15.83,16.1,0.1,0.25]
     contrast = 1
     analyze  = 'box'               # box,circle
     spec_v   = 87
@@ -179,7 +180,7 @@ if __name__=='__main__':
     spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
 #    #v_co[120:125] T=np.sum(spec_on_co[120:125],axis=0)
     v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
-    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on_VGPS,off,contrast,spec_v)
+    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on_VGPS,off_VGPS,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,spec_off_vgps,v_vgps,v0,d0,cont_on,cont_off,on,off,analyze,method)
     

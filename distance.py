@@ -205,7 +205,7 @@ if __name__=='__main__':
     file1   = '../data/THOR_cont_1440MHz_L16.25deg_25arcsec_image.fits'
     file2   = '../data/THOR_HI_without_continuum_L16.25.fits'
     file3   = '../data/grs-16-cube.fits'
-    file4   = '../data/OH_1612mhz_L16.25_deg.fits'
+    file4   = '../data/OH_1720mhz_L16.25_deg.fits'
     file5   = '../data/VGPS_cont_MOS017.fits'
     file6   = '../data/rotation_model.txt'
     region  = [16.66,16.81,-0.03,0.19]      #region l1,l2,b1,b2
