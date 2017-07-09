@@ -171,7 +171,7 @@ if __name__=='__main__':
     spec_on,spec_off,v  = spectra(file4,analyze,region,on,off,contrast,spec_v)
     spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
     #v_co[120:125] T=np.sum(spec_on_co[120:125],axis=0)
-    v0,d0 = z.dist(l,b,d,V = 244,v_sun = 244,r_sun = 8.5)
+    v0,d0 = z.dist(l,b,d,V = 240,v_sun = 240,r_sun = 8.34)
 #    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,v0,d0,cont_on,cont_off,on,off,analyze,method)

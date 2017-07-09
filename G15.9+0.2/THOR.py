@@ -136,9 +136,9 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax22.set_ylabel('T(K)')    
     
     ax3.plot(v0,d0)
-    ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
+    ax3.plot(v[0:177] ,[7.0]*len(v[0:177]),'--',color='purple')
     ax3.plot(v[0:149] ,[10.5]*len(v[0:149]),'--',color='purple')
-    ax3.plot(v[0:99] ,[14]*len(v[0:99]),'--',color='purple')
+    ax3.plot(v[0:99] ,[13.5]*len(v[0:99]),'--',color='purple')
     ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.plot([21]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
@@ -160,7 +160,7 @@ if __name__=='__main__':
     file4   = '../../data/MOS_017.Tb.fits'
     file5   = '../../data/VGPS_cont_MOS017.fits'
     file6   = '../../data/rotation_model.txt'
-    region  = [15.7,16.0,0.0,0.3]      #region l1,l2,b1,b2
+    region  = [15.82,15.97,0.12,0.27]      #region l1,l2,b1,b2
     on      = [15.9,15.92,0.16,0.19] 
     off     = [15.9,15.94,0.16,0.19]
     on_VGPS = [15.83,15.95,0.1,0.25]
@@ -179,7 +179,7 @@ if __name__=='__main__':
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
 #    #v_co[120:125] T=np.sum(spec_on_co[120:125],axis=0)
-    v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+    v0,d0 = z.dist(l,b,d,V = 240,v_sun = 240,r_sun = 8.34)
     spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on_VGPS,off_VGPS,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,spec_off_vgps,v_vgps,v0,d0,cont_on,cont_off,on,off,analyze,method)
