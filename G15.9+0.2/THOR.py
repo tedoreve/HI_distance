@@ -133,7 +133,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     xx = x1 + x2
     labs = ['HI','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-    ax2.set_ylabel(r'e$^{-\tau}$',fontsize=15) 
+    ax2.set_ylabel(r'$e^{-\tau}$',fontsize=15) 
     ax22.set_ylabel('T(K)')    
     
     ax3.plot(v0,d0)
@@ -150,6 +150,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     
     
     fig.subplots_adjust(hspace=0.0)
+    fig.subplots_adjust(top=0.98,bottom=0.1,left=0.07,right=1.0)
     plt.show()
     
     return T_on_co,e_tau
