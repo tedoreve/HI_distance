@@ -116,7 +116,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     xx = x1 + x2 + x3
     labs = ['HI_on','HI_off','HI_VGPS']
     props = font_manager.FontProperties(size=10)
-    ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
+    ax1.legend(xx, labs, loc='upper right', shadow=True, prop=props)    
     ax1.set_ylabel('T(K)')
 #    ax4.set_ylabel('T(K)')
     ax1.set_title('Spectra of G15.9+0.2')
@@ -126,13 +126,14 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax2.plot([138]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax2.plot([95]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax2.plot([21]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
+    ax2.set_ylim(-0.5,1.4)
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
     
     xx = x1 + x2
     labs = ['HI','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-    ax2.set_ylabel(r'$e^{-\tau}$',fontsize=13) 
+    ax2.set_ylabel(r'e$^{-\tau}$',fontsize=15) 
     ax22.set_ylabel('T(K)')    
     
     ax3.plot(v0,d0)
@@ -145,10 +146,10 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax3.set_xlabel('velocity(km/s)')
     ax3.set_ylabel('distance(kpc)')
     ax3.set_xlim(v[75],v[199])
-    ax3.set_ylim(0,20)
+    ax3.set_ylim(0,19)
     
     
-    fig.subplots_adjust(hspace=0.05)
+    fig.subplots_adjust(hspace=0.0)
     plt.show()
     
     return T_on_co,e_tau

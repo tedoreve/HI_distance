@@ -186,7 +186,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax4= ax3.twinx()
     x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
     xx = x1 + x4
-    labs = ['v-d relation','1612 MHz maser']
+    labs = ['v-d relation','1720 MHz maser']
     ax3.legend(xx, labs, loc='upper right', shadow=True, prop=props)    
 #    ax1.set_ylim(-40,15)
     ax4.set_ylabel('T(K)')
@@ -229,7 +229,7 @@ if __name__=='__main__':
     spec_on,spec_off,spec_reg,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     spec_on_co,spec_off_co,spec_reg_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
     #v_co[120:125] T=np.sum(spec_reg[120:125],axis=0)
-    v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+    v0,d0 = z.dist(l,b,d,V = 240,v_sun = 240,r_sun = 8.34)
     spec_on_vgps,spec_off_vgps,spec_reg,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,v_vgps,v0,d0,cont_on,cont_off,on,off,analyze,method)
