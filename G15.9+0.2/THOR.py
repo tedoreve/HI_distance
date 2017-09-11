@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
 #matplotlib.use('Agg')
 from astropy.io import fits
-from astropy.tests import zmf as z
+import zmf as z
  
 #============================ continuum =======================================
 def continuum(file,analyze,region,on,off,contrast):
@@ -116,7 +116,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     xx = x1 + x2 + x3
     labs = ['HI_on','HI_off','HI_VGPS']
     props = font_manager.FontProperties(size=10)
-    ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
+    ax1.legend(xx, labs, loc='upper right', shadow=True, prop=props)    
     ax1.set_ylabel('T(K)')
 #    ax4.set_ylabel('T(K)')
     ax1.set_title('Spectra of G15.9+0.2')
@@ -126,29 +126,31 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax2.plot([138]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax2.plot([95]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax2.plot([21]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
+    ax2.set_ylim(-0.5,1.4)
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
     
     xx = x1 + x2
     labs = ['HI','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-    ax2.set_ylabel(r'$e^{-\tau}$',fontsize=13) 
+    ax2.set_ylabel(r'$e^{-\tau}$',fontsize=15) 
     ax22.set_ylabel('T(K)')    
     
     ax3.plot(v0,d0)
-    ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
+    ax3.plot(v[0:177] ,[7.0]*len(v[0:177]),'--',color='purple')
     ax3.plot(v[0:149] ,[10.5]*len(v[0:149]),'--',color='purple')
-    ax3.plot(v[0:99] ,[14]*len(v[0:99]),'--',color='purple')
+    ax3.plot(v[0:99] ,[13.5]*len(v[0:99]),'--',color='purple')
     ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.plot([21]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.set_xlabel('velocity(km/s)')
     ax3.set_ylabel('distance(kpc)')
     ax3.set_xlim(v[75],v[199])
-    ax3.set_ylim(0,20)
+    ax3.set_ylim(0,19)
     
     
-    fig.subplots_adjust(hspace=0.05)
+    fig.subplots_adjust(hspace=0.0)
+    fig.subplots_adjust(top=0.98,bottom=0.1,left=0.07,right=1.0)
     plt.show()
     
     return T_on_co,e_tau
@@ -160,10 +162,11 @@ if __name__=='__main__':
     file4   = '../../data/MOS_017.Tb.fits'
     file5   = '../../data/VGPS_cont_MOS017.fits'
     file6   = '../../data/rotation_model.txt'
-    region  = [15.7,16.0,0.0,0.3]      #region l1,l2,b1,b2
+    region  = [15.82,15.97,0.12,0.27]      #region l1,l2,b1,b2
     on      = [15.9,15.92,0.16,0.19] 
     off     = [15.9,15.94,0.16,0.19]
     on_VGPS = [15.83,15.95,0.1,0.25]
+    off_VGPS= [15.83,16.1,0.1,0.25]
     contrast = 1
     analyze  = 'box'               # box,circle
     spec_v   = 87
@@ -178,8 +181,8 @@ if __name__=='__main__':
     spec_on,spec_off,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     spec_on_co,spec_off_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
 #    #v_co[120:125] T=np.sum(spec_on_co[120:125],axis=0)
-    v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
-    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on_VGPS,off,contrast,spec_v)
+    v0,d0 = z.dist(l,b,d,V = 240,v_sun = 240,r_sun = 8.34)
+    spec_on_vgps,spec_off_vgps,v_vgps  = spectra(file4,analyze,region,on_VGPS,off_VGPS,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,spec_off_vgps,v_vgps,v0,d0,cont_on,cont_off,on,off,analyze,method)
     

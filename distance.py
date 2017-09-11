@@ -164,11 +164,14 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
 #    ax1.set_ylim(y2lim[0],y2lim[1])
 
     x1 = ax2.plot(v , e_tau )
+    
     ax2.plot(v ,[1]*len(v ),'--',color='purple')
-#    ax2.plot([138]*len(np.arange(-1,1.7,0.05)),np.arange(-1,1.7,0.05),'--',color='purple')
+    ax2.plot([138]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
+    ax2.plot([95]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax2.plot([21]*len(np.arange(-1,1.7,0.05)),np.arange(-1,1.7,0.05),'--',color='purple')
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
+    ax2.set_title('Spectra of G16.7+0.1')
     
     xx = x1 + x2
     labs = ['HI','CO']
@@ -181,12 +184,16 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     x1 = ax3.plot(v0,d0)
 #    ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
     ax3.plot(v[0:100] ,[13.9]*len(v[0:100]),'--',color='purple')
+    ax3.plot(v[0:177] ,[7.0]*len(v[0:177]),'--',color='purple')
+    ax3.plot(v[0:149] ,[10.5]*len(v[0:149]),'--',color='purple')
 #    ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+    ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+    ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.plot([21]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax4= ax3.twinx()
     x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
     xx = x1 + x4
-    labs = ['v-d relation','1612 MHz maser']
+    labs = ['v-d relation','1720 MHz maser']
     ax3.legend(xx, labs, loc='upper right', shadow=True, prop=props)    
 #    ax1.set_ylim(-40,15)
     ax4.set_ylabel('T(K)')
@@ -194,6 +201,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax3.set_ylabel('distance(kpc)')
     ax3.set_xlim(v[75],v[199])
     ax3.set_ylim(0,20)
+    ax4.set_ylim(-9,39)
     
     
     fig.subplots_adjust(hspace=0.0)
@@ -205,7 +213,7 @@ if __name__=='__main__':
     file1   = '../data/VGPS_cont_MOS049.fits'
     file2   = '../data/THOR_HI_without_continuum_L16.25.fits'
     file3   = '../data/grs-16-cube.fits'
-    file4   = '../data/OH_1612mhz_L16.25_deg.fits'
+    file4   = '../data/OH_1720mhz_L16.25_deg.fits'
     file5   = '../data/VGPS_cont_MOS017.fits'
     file6   = '../data/rotation_model.txt'
     region  = [16.66,16.81,-0.03,0.19]      #region l1,l2,b1,b2
@@ -229,7 +237,7 @@ if __name__=='__main__':
     spec_on,spec_off,spec_reg,v  = spectra(file2,analyze,region,on,off,contrast,spec_v)
     spec_on_co,spec_off_co,spec_reg_co,v_co  = spectra(file3,analyze,region,on,off,contrast,122)
     #v_co[120:125] T=np.sum(spec_reg[120:125],axis=0)
-    v0,d0 = z.dist(l,b,d,V = 220,v_sun = 220,r_sun = 8.5)
+    v0,d0 = z.dist(l,b,d,V = 240,v_sun = 240,r_sun = 8.34)
     spec_on_vgps,spec_off_vgps,spec_reg,v_vgps  = spectra(file4,analyze,region,on,off,contrast,spec_v)
 #    cont_on_vgps,cont_off_vgps    = continuum(file5,analyze,region,on,off,contrast)
     T_on_co,e_tau = absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,v_vgps,v0,d0,cont_on,cont_off,on,off,analyze,method)
