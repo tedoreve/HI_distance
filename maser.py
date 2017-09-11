@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
 from astropy import wcs
-from astropy.tests import zmf as z
+import zmf as z
 
 #=============================assistant code===================================
 #--------------------------------plot------------------------------------------
@@ -121,7 +121,7 @@ def mapp(file,region,res,index,v_seq,m,name):
                       v[index]*cont_reg.shape[1]/res/(v[-1]-v[index])+        \
                      (res-j-1)*cont_reg.shape[1]/res,                         \
             T_on[index:]/big[i,j]*cont_reg.shape[0]/res/2+\
-            cont_reg.shape[0]/res/2+i*cont_reg.shape[0]/res,color='m')
+            cont_reg.shape[0]/res/2+i*cont_reg.shape[0]/res,color='w')
     plt.title(name)
     
     plt.show()   
@@ -130,13 +130,13 @@ def mapp(file,region,res,index,v_seq,m,name):
 #===============================main===========================================
 if __name__=='__main__':
     file     = ['../data/THOR_cont_1440MHz_L49.25deg_25arcsec_image.fits',    \
-                '../data/OH_1720mhz_L49.25_deg.smooth20sec.fits']
+                '../data/OH_1612mhz_L49.25_deg.smooth20sec.fits']
     region   = [49.15,49.25,-0.4,-0.3]      #region l1,l2,b1,b2
     res      = 8
     index    = 48
     v_seq    = 'OH'  # H OH
     m        = 0.05  # control the scale of spectra
-    name     = '1720 MHz spectra on 1440 MHz continuum'
+    name     = '1612 MHz spectra on 1440 MHz continuum'
     cont_reg,v,big  = mapp(file,region,res,index,v_seq,m,name)
 
     

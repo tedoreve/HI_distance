@@ -105,18 +105,18 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
     
     x1 = ax1.plot(v , T_on )
-    x2 = ax1.plot(v , T_off )
-    x3 = ax1.plot(v_vgps, T_on_vgps,'r')
-    ax1.plot(v ,[24]*len(v ),'--',color='purple')
+    x2 = ax1.plot(v , T_off ,'orange')
+#    x3 = ax1.plot(v_vgps, T_on_vgps,'r')
+#    ax1.plot(v ,[24]*len(v ),'--',color='purple')
     ax1.plot([138]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
-    ax1.plot([95]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
+#    ax1.plot([95]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
     ax1.plot([21]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
 #    ax4= ax1.twinx()
 #    x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
-    xx = x1 + x2 + x3
-    labs = ['HI_on','HI_off','HI_VGPS']
+    xx = x1 + x2
+    labs = ['HI_on','HI_off']
     props = font_manager.FontProperties(size=10)
-    ax1.legend(xx, labs, loc='upper right', shadow=True, prop=props)    
+    ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
     ax1.set_ylabel('T(K)')
 #    ax4.set_ylabel('T(K)')
     ax1.set_title('Spectra of G15.9+0.2')
@@ -124,7 +124,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     x1 = ax2.plot(v , e_tau )
     ax2.plot(v ,[1]*len(v ),'--',color='purple')
     ax2.plot([138]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
-    ax2.plot([95]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
+#    ax2.plot([95]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax2.plot([21]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax2.set_ylim(-0.5,1.4)
     ax22  = ax2.twinx()
@@ -141,7 +141,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax3.plot(v[0:149] ,[10.5]*len(v[0:149]),'--',color='purple')
     ax3.plot(v[0:99] ,[13.5]*len(v[0:99]),'--',color='purple')
     ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
-    ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+#    ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.plot([21]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.set_xlabel('velocity(km/s)')
     ax3.set_ylabel('distance(kpc)')
@@ -150,7 +150,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     
     
     fig.subplots_adjust(hspace=0.0)
-    fig.subplots_adjust(top=0.98,bottom=0.1,left=0.07,right=1.0)
+#    fig.subplots_adjust(top=0.98,bottom=0.1,left=0.07,right=1.0)
     plt.show()
     
     return T_on_co,e_tau

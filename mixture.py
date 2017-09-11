@@ -12,7 +12,7 @@ import matplotlib.path as mpath
 from astropy.io import fits
 from astropy import wcs
 import copy as cp
-from astropy.tests import zmf as z
+import zmf as z
 #from astropy import constants as con
 
 #=============================assistant code===================================
