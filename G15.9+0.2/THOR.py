@@ -138,7 +138,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     
     ax3.plot(v0,d0)
     ax3.plot(v[0:177] ,[7.0]*len(v[0:177]),'--',color='purple')
-    ax3.plot(v[0:149] ,[10.5]*len(v[0:149]),'--',color='purple')
+#    ax3.plot(v[0:149] ,[10.5]*len(v[0:149]),'--',color='purple')
     ax3.plot(v[0:99] ,[13.5]*len(v[0:99]),'--',color='purple')
     ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
 #    ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
