@@ -80,13 +80,13 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
                         
             T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
             T_on_vgps= np.mean(np.mean(spec_on_vgps,axis=1),axis=1)
-            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)       
+            e_tau    = T_on-T_off      
         else:
             T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
             T_off    = np.mean(np.mean(spec_off,axis=1),axis=1)
             T_con    = np.mean(cont_on)
             T_coff   = np.mean(cont_off)
-            e_tau    = (T_on-T_off)/(T_con-T_coff)       
+            e_tau    = T_on-T_off     
             
     elif analyze == 'circle':
         T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
@@ -123,17 +123,17 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
 #    ax1.set_ylim(y2lim[0],y2lim[1])
     x1 = ax2.plot(v , e_tau )
     ax2.plot(v ,[1]*len(v ),'--',color='purple')
-    ax2.plot([138]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
+    ax2.plot([138]*len(np.arange(-100,30,5)),np.arange(-100,30,5),'--',color='purple')
 #    ax2.plot([95]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
-    ax2.plot([21]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
-    ax2.set_ylim(-0.5,1.4)
+    ax2.plot([21]*len(np.arange(-100,30,5)),np.arange(-100,30,5),'--',color='purple')
+    ax2.set_ylim(-100,30)
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
     
     xx = x1 + x2
     labs = ['HI','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-    ax2.set_ylabel(r'$e^{-\tau}$',fontsize=15) 
+    ax2.set_ylabel('T(K)') 
     ax22.set_ylabel('T(K)')    
     
     ax3.plot(v0,d0)

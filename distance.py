@@ -89,14 +89,14 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
                         /(cont_off.shape[0]*cont_off.shape[1]-cont_on.shape[0]*cont_on.shape[1])
                         
             T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
-            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)       
+            e_tau    = T_on-T_off     
         else:
             T_on     = np.mean(np.mean(spec_on,axis=1),axis=1)
             T_off    = np.mean(np.mean(spec_off,axis=1),axis=1)
             T_con    = np.mean(cont_on)
             T_coff   = np.mean(cont_off)
             T_on_co  = np.mean(np.mean(spec_on_co,axis=1),axis=1)
-            e_tau    = 1+(T_on-T_off)/(T_con-T_coff)     
+            e_tau    = T_on-T_off 
     
     if analyze   == 'tri':
         if method == 'tww':
@@ -166,9 +166,9 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     x1 = ax2.plot(v , e_tau )
     
     ax2.plot(v ,[1]*len(v ),'--',color='purple')
-    ax2.plot([138]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
-    ax2.plot([95]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
-    ax2.plot([21]*len(np.arange(-1,1.7,0.05)),np.arange(-1,1.7,0.05),'--',color='purple')
+    ax2.plot([138]*len(np.arange(-50,30,2)),np.arange(-50,30,2),'--',color='purple')
+#    ax2.plot([95]*len(np.arange(-50,30,2)),np.arange(-50,30,2),'--',color='purple')
+    ax2.plot([21]*len(np.arange(-50,30,2)),np.arange(-50,30,2),'--',color='purple')
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
     ax2.set_title('Spectra of G16.7+0.1')
@@ -176,19 +176,18 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     xx = x1 + x2
     labs = ['HI','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-    ax2.set_ylabel(r'$e^{-\tau}$',fontsize=15) 
+    ax2.set_ylabel('T(K)') 
     ax22.set_ylabel('T(K)')   
     ax22.set_ylim(-0.2,1.5)
-    ax2.set_ylim(-0.7,1.8)
+#    ax2.set_ylim(-0.7,1.8)
     
     x1 = ax3.plot(v0,d0)
 #    ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
     ax3.plot(v[0:100] ,[13.9]*len(v[0:100]),'--',color='purple')
     ax3.plot(v[0:177] ,[7.0]*len(v[0:177]),'--',color='purple')
-    ax3.plot(v[0:149] ,[10.5]*len(v[0:149]),'--',color='purple')
-#    ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+#    ax3.plot(v[0:149] ,[10.5]*len(v[0:149]),'--',color='purple')
     ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
-    ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
+#    ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.plot([21]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax4= ax3.twinx()
     x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
@@ -200,7 +199,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax3.set_xlabel('velocity(km/s)')
     ax3.set_ylabel('distance(kpc)')
     ax3.set_xlim(v[75],v[199])
-    ax3.set_ylim(0,20)
+    ax3.set_ylim(0,19)
     ax4.set_ylim(-9,39)
     
     
