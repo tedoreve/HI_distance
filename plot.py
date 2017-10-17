@@ -10,12 +10,12 @@ import matplotlib.patches as patches
 
 l1,l2,b1,b2 = region
 
-T=np.sum(spec_reg_co[140:146],axis=0)
+T=np.sum(spec_reg_co[110:120],axis=0)
 
 fig = plt.figure()
 ax = fig.add_subplot(111, aspect='equal')
 #neg = ax.imshow(T,cmap='gray',origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
-neg = ax.imshow(cont_reg,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+neg = ax.imshow(T,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
 cbar=fig.colorbar(neg,ax=ax)
 
 fig.subplots_adjust(top=0.98,bottom=0.1,left=0.07,right=1.0)
