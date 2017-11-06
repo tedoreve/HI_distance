@@ -31,10 +31,11 @@ ax2.set_title('l-b')
 
 star = np.loadtxt('../data/rosStar.txt')
 w = WCS(h)
-x = []
-y = []
-for i in range(30):
-    x1,y1 = w.wcs_world2pix(star[i][2],star[i][3],0)
-    x.append(x1)
-    y.append(y1)
+
+x,y = w.wcs_world2pix(star[:,2],star[:,3],0)
+
 plt.plot(x,y,'o',color='r')
+
+hdu = fits.PrimaryHDU(array,header=h)
+
+hdu.writeto('new.fits')
