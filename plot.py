@@ -10,7 +10,7 @@ import matplotlib.patches as patches
 
 l1,l2,b1,b2 = region
 
-T=np.sum(spec_reg_co[110:120],axis=0)
+T=np.sum(spec_reg_co[630:],axis=0)
 
 fig = plt.figure()
 ax = fig.add_subplot(111, aspect='equal')
@@ -29,15 +29,20 @@ ax.set_ylabel('b(deg)')
 #ytick  = [b1,b1+deltab,b1+deltab*2,b1+deltab*3,b1+deltab*4]
 #ax.set_yticklabels(ytick,fontsize=20)
 
-
-onoff = on
-ax.add_patch(patches.Rectangle((onoff[0], onoff[2]),onoff[1]-onoff[0],    \
-                               onoff[3]-onoff[2],color='r',fill=False))
-
-xmajorLocator   = MultipleLocator(0.03)
-xmajorFormatter = FormatStrFormatter('%2.2f')
-ax.xaxis.set_major_locator(xmajorLocator)  
-ax.xaxis.set_major_formatter(xmajorFormatter)
-
+#
+#onoff = off
+#ax.add_patch(patches.Rectangle((onoff[0], onoff[2]),onoff[1]-onoff[0],    \
+#                               onoff[3]-onoff[2],color='r',fill=False))
+#onoff = on
+#ax.add_patch(patches.Rectangle((onoff[0], onoff[2]),onoff[1]-onoff[0],    \
+#                               onoff[3]-onoff[2],color='r',fill=False))
+#
+#xmajorLocator   = MultipleLocator(0.03)
+#xmajorFormatter = FormatStrFormatter('%2.2f')
+#ax.xaxis.set_major_locator(xmajorLocator)  
+#ax.xaxis.set_major_formatter(xmajorFormatter)
+#
 #levels=[10,20,30,40,60]
 #plt.contour(cont_reg,colors='white',levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+#
+#ax.add_patch(patches.Circle((16.79, 0.0),radius=20/3600/2,color='white',fill=True))

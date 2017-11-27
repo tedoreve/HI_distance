@@ -131,7 +131,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     x2 = ax22.plot(v_co, T_on_co,color='r')
     
     xx = x1 + x2
-    labs = ['HI','CO']
+    labs = ['HI_abs','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
     ax2.set_ylabel('T(K)') 
     ax22.set_ylabel('T(K)')    

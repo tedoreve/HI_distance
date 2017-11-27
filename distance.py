@@ -174,7 +174,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax2.set_title('Spectra of G16.7+0.1')
     
     xx = x1 + x2
-    labs = ['HI','CO']
+    labs = ['HI_abs','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
     ax2.set_ylabel('T(K)') 
     ax22.set_ylabel('T(K)')   
@@ -209,7 +209,7 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     return T_on_co,e_tau
 #===============================main===========================================
 if __name__=='__main__':
-    file1   = '../data/VGPS_cont_MOS049.fits'
+    file1   = '../data/THOR_cont_1440MHz_L16.25deg_25arcsec_image.fits'
     file2   = '../data/THOR_HI_without_continuum_L16.25.fits'
     file3   = '../data/grs-16-cube.fits'
     file4   = '../data/OH_1720mhz_L16.25_deg.fits'
