@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
 from astropy import wcs
-from astropy.tests import zmf as z
+import zmf as z
 
 #=============================assistant code===================================
 #--------------------------------plot------------------------------------------
