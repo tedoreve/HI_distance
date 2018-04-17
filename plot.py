@@ -10,7 +10,7 @@ import matplotlib.patches as patches
 
 l1,l2,b1,b2 = region
 
-T=np.sum(spec_reg_co[630:],axis=0)
+T=np.sum(spec_reg_co[120:126],axis=0)
 
 fig = plt.figure()
 ax = fig.add_subplot(111, aspect='equal')
@@ -42,7 +42,7 @@ ax.set_ylabel('b(deg)')
 #ax.xaxis.set_major_locator(xmajorLocator)  
 #ax.xaxis.set_major_formatter(xmajorFormatter)
 #
-#levels=[10,20,30,40,60]
-#plt.contour(cont_reg,colors='white',levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+levels=[10,20,30,40,60]
+plt.contour(cont_reg,colors='white',levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
 #
 #ax.add_patch(patches.Circle((16.79, 0.0),radius=20/3600/2,color='white',fill=True))
