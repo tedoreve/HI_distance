@@ -145,22 +145,23 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     v_vgps= v_vgps/1000
     
     #开始画图
-    fig, (ax2, ax3) = plt.subplots(2, sharex=True)
+    fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
     
-#    x1 = ax1.plot(v , T_on )
-#    x2 = ax1.plot(v , T_off )
-##    ax1.plot([138]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
-#    ax1.plot([21]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
-##    ax4= ax1.twinx()
-##    x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
-#    xx = x1 + x2 
-#    labs = ['HI_on','HI_off','1720 MHz maser']
+    x1 = ax1.plot(v , T_on )
+    x2 = ax1.plot(v , T_off,'orange' )
+#    ax1.plot([138]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
+    ax1.plot([21]*len(list(range(-80,20))),list(range(-80,20)),'--',color='purple')
+#    ax4= ax1.twinx()
+#    x4 = ax4.plot(v_vgps,T_on_vgps,color='r')   
+    xx = x1 + x2 
+    labs = ['HI_on','HI_off','1720 MHz maser']
     props = font_manager.FontProperties(size=10)
-#    ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-#    ax1.set_ylabel('T(K)')
-##    ax1.set_ylim(-40,15)
-##    ax4.set_ylabel('T(K)')
-#    ax1.set_title('G16.7+0.1')
+    ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
+    ax1.set_ylabel('T(K)')
+    ax1.set_ylim(-50,30)
+    ax1.yaxis.set_tick_params(labelsize=14)
+#    ax4.set_ylabel('T(K)')
+    ax1.set_title('Spectra of G16.7+0.1')
 #    ax1.set_ylim(y2lim[0],y2lim[1])
 
     x1 = ax2.plot(v , e_tau )
@@ -171,15 +172,17 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax2.plot([21]*len(np.arange(-50,30,2)),np.arange(-50,30,2),'--',color='purple')
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
-    ax2.set_title('Spectra of G16.7+0.1')
+#    ax2.set_title('Spectra of G16.7+0.1')
     
     xx = x1 + x2
     labs = ['HI_abs','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-    ax2.set_ylabel('T(K)') 
-    ax22.set_ylabel('T(K)')   
+    ax2.set_ylabel('T(K)',fontsize=14) 
+    ax22.set_ylabel('T(K)',fontsize=14)   
+    ax2.yaxis.set_tick_params(labelsize=14)
+    ax22.yaxis.set_tick_params(labelsize=14)
     ax22.set_ylim(-0.2,1.5)
-#    ax2.set_ylim(-0.7,1.8)
+    ax2.set_ylim(-60,29)
     
     x1 = ax3.plot(v0,d0)
 #    ax3.plot(v[0:177] ,[7.5]*len(v[0:177]),'--',color='purple')
@@ -195,12 +198,15 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     labs = ['v-d relation','1720 MHz maser']
     ax3.legend(xx, labs, loc='upper right', shadow=True, prop=props)    
 #    ax1.set_ylim(-40,15)
-    ax4.set_ylabel('T(K)')
-    ax3.set_xlabel('velocity(km/s)')
-    ax3.set_ylabel('distance(kpc)')
+    ax4.set_ylabel('T(K)',fontsize=14)
+    ax3.set_xlabel('velocity(km/s)',fontsize=14)
+    ax3.set_ylabel('distance(kpc)',fontsize=14)
+    ax3.xaxis.set_tick_params(labelsize=14)
+    ax3.yaxis.set_tick_params(labelsize=14)
     ax3.set_xlim(v[75],v[199])
     ax3.set_ylim(0,19)
     ax4.set_ylim(-9,39)
+    ax4.yaxis.set_tick_params(labelsize=14)
     
     
     fig.subplots_adjust(hspace=0.0)
@@ -219,7 +225,7 @@ if __name__=='__main__':
 #    on      = [16.72,0.046,16.701,0.068,16.72,0.068] 
 #    off     = [16.718,0.02,16.68,0.066,16.718,0.066] 
     on      = [16.703,16.723,0.053,0.073]
-    off     = [16.681,16.75,0.021,0.075]
+    off     = [16.681,16.725,0.021,0.075]
 #    on_co   = [15.88,15.94,0.14,0.2]
     contrast = 1
     analyze  = 'box'               # box,tri(caution!!),circle

@@ -117,7 +117,8 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     labs = ['HI_on','HI_off']
     props = font_manager.FontProperties(size=10)
     ax1.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-    ax1.set_ylabel('T(K)')
+    ax1.set_ylabel('T(K)',fontsize=14)
+    ax1.yaxis.set_tick_params(labelsize=14)
 #    ax4.set_ylabel('T(K)')
     ax1.set_title('Spectra of G15.9+0.2')
 #    ax1.set_ylim(y2lim[0],y2lim[1])
@@ -126,15 +127,19 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax2.plot([138]*len(np.arange(-100,30,5)),np.arange(-100,30,5),'--',color='purple')
 #    ax2.plot([95]*len(np.arange(-0.25,1.5,0.05)),np.arange(-0.25,1.5,0.05),'--',color='purple')
     ax2.plot([21]*len(np.arange(-100,30,5)),np.arange(-100,30,5),'--',color='purple')
-    ax2.set_ylim(-100,30)
+    ax2.set_ylim(-100,39)
+    
     ax22  = ax2.twinx()
     x2 = ax22.plot(v_co, T_on_co,color='r')
     
     xx = x1 + x2
     labs = ['HI_abs','CO']
     ax2.legend(xx, labs, loc='lower right', shadow=True, prop=props)    
-    ax2.set_ylabel('T(K)') 
-    ax22.set_ylabel('T(K)')    
+    ax2.set_ylabel('T(K)',fontsize=14) 
+    ax22.set_ylabel('T(K)',fontsize=14)    
+    ax2.yaxis.set_tick_params(labelsize=14)
+    ax22.yaxis.set_tick_params(labelsize=14)
+    
     
     ax3.plot(v0,d0)
     ax3.plot(v[0:177] ,[7.0]*len(v[0:177]),'--',color='purple')
@@ -143,8 +148,10 @@ def absorption_spec(spec_on,spec_off,v,spec_on_co,spec_off_co,v_co,spec_on_vgps,
     ax3.plot([138]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
 #    ax3.plot([95]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
     ax3.plot([21]*len(list(range(0,20))),list(range(0,20)),'--',color='purple')
-    ax3.set_xlabel('velocity(km/s)')
-    ax3.set_ylabel('distance(kpc)')
+    ax3.set_xlabel('velocity(km/s)',fontsize=14)
+    ax3.set_ylabel('distance(kpc)',fontsize=14)
+    ax3.xaxis.set_tick_params(labelsize=14)
+    ax3.yaxis.set_tick_params(labelsize=14)
     ax3.set_xlim(v[75],v[199])
     ax3.set_ylim(0,19)
     
