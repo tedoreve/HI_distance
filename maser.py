@@ -130,13 +130,13 @@ def mapp(file,region,res,index,v_seq,m,name):
 #===============================main===========================================
 if __name__=='__main__':
     file     = ['../data/THOR_cont_1440MHz_L49.25deg_25arcsec_image.fits',    \
-                '../data/OH_1612mhz_L49.25_deg.smooth20sec.fits']
-    region   = [49.15,49.25,-0.4,-0.3]      #region l1,l2,b1,b2
+                '../data/OH_1720mhz_L49.25_deg.smooth20sec.fits']
+    region   = [49.3,49.6,-0.5,-0.2]      #region l1,l2,b1,b2
     res      = 8
     index    = 48
     v_seq    = 'OH'  # H OH
     m        = 0.05  # control the scale of spectra
-    name     = '1612 MHz spectra on 1440 MHz continuum'
+    name     = '1720 MHz spectra on 1440 MHz continuum'
     cont_reg,v,big  = mapp(file,region,res,index,v_seq,m,name)
 
     

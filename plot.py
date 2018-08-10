@@ -11,9 +11,13 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 l1,l2,b1,b2 = region
 
+<<<<<<< HEAD
 #T=np.sum(spec_reg_co[630:],axis=0)
 
 fig = plt.figure(figsize=(7,8.3))
+=======
+T=np.sum(spec_reg_co[120:126],axis=0)
+>>>>>>> 599dde07c491fa1f0a9de06f9075aecb7a791935
 
 ax = fig.add_subplot(111, aspect='equal')
 #neg = ax.imshow(T,cmap='gray',origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
@@ -48,10 +52,15 @@ onoff = on
 ax.add_patch(patches.Rectangle((onoff[0], onoff[2]),onoff[1]-onoff[0],    \
                                onoff[3]-onoff[2],color='r',fill=False))
 #
+<<<<<<< HEAD
 xmajorLocator   = MultipleLocator(0.03)
 xmajorFormatter = FormatStrFormatter('%2.2f')
 ax.xaxis.set_major_locator(xmajorLocator)  
 ax.xaxis.set_major_formatter(xmajorFormatter)
+=======
+levels=[10,20,30,40,60]
+plt.contour(cont_reg,colors='white',levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+>>>>>>> 599dde07c491fa1f0a9de06f9075aecb7a791935
 #
 levels=[10,20,30,40,60]
 cs=ax.contour(cont_reg,colors='white',levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])

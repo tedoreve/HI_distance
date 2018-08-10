@@ -37,6 +37,7 @@ ax.scatter(x, y, marker='x', s=100, c='b', alpha=0.5,label='G15.9+0.2')
 ax.scatter(3.5, -5.5, marker='*',s=100, c='g', alpha=0.5,label='G16.7+0.1')
 
 ax.arrow(1.0, 2.0, 1.8, -8.9, head_width=0.5, head_length=1,color='black')
+ax.arrow(2.8, -6.9, -1.6, 7.9, head_width=0.5, head_length=1,color='black')
 ax.text(0.5, 6.5, 'l=16 deg',rotation=-74 , fontdict=font)
 ax.text(0.6, -1.0, 'Distance range',rotation=-76 , fontdict=font)
 
@@ -45,7 +46,7 @@ x1, y1 = np.array([[0.0, 0.0], [-8.5, 8.5]])
 line1 = mlines.Line2D(x1, y1 , lw=2, ls='--', color='r')
 x2, y2 = np.array([[0.0, 3.4], [8.5, -7.9]])
 line2 = mlines.Line2D(x2, y2 , lw=2, ls='--', color='g',label='Line of Sight')
-x3, y3 = np.array([[0.0, 7.8], [0.0, 3.4]])
+x3, y3 = np.array([[0.0, 7.83], [0.0, 3.43]])
 line3 = mlines.Line2D(x3, y3 , lw=2, ls='--', color='b',label='Radius to Tangent Point')
 
 ax.xaxis.set_tick_params(labelsize=14)
