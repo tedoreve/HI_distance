@@ -11,17 +11,17 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 l1,l2,b1,b2 = region
 
-<<<<<<< HEAD
+
 #T=np.sum(spec_reg_co[630:],axis=0)
 
 fig = plt.figure(figsize=(7,8.3))
-=======
+
 T=np.sum(spec_reg_co[120:126],axis=0)
->>>>>>> 599dde07c491fa1f0a9de06f9075aecb7a791935
+
 
 ax = fig.add_subplot(111, aspect='equal')
-#neg = ax.imshow(T,cmap='gray',origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
-neg = ax.imshow(cont_reg,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+neg = ax.imshow(T,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
+# neg = ax.imshow(cont_reg,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
 
 divider = make_axes_locatable(ax)
 cax = divider.append_axes("right", size="5%", pad=0.05)
@@ -45,25 +45,23 @@ ax.yaxis.set_tick_params(labelsize=14)
 #ax.set_yticklabels(ytick,fontsize=14)
 
 #
-onoff = off
-ax.add_patch(patches.Rectangle((onoff[0], onoff[2]),onoff[1]-onoff[0],    \
-                               onoff[3]-onoff[2],color='r',fill=False))
-onoff = on
-ax.add_patch(patches.Rectangle((onoff[0], onoff[2]),onoff[1]-onoff[0],    \
-                               onoff[3]-onoff[2],color='r',fill=False))
+# onoff = off
+# ax.add_patch(patches.Rectangle((onoff[0], onoff[2]),onoff[1]-onoff[0],    \
+#                                onoff[3]-onoff[2],color='r',fill=False))
+# onoff = on
+# ax.add_patch(patches.Rectangle((onoff[0], onoff[2]),onoff[1]-onoff[0],    \
+#                                onoff[3]-onoff[2],color='r',fill=False))
+# ax.add_patch(patches.Circle((onoff[0]+(onoff[1]-onoff[0])/2, onoff[2]+(onoff[1]-onoff[0])/2), \
+#                              (onoff[1]-onoff[0])/7, color='b',fill=False))
 #
-<<<<<<< HEAD
 xmajorLocator   = MultipleLocator(0.03)
 xmajorFormatter = FormatStrFormatter('%2.2f')
 ax.xaxis.set_major_locator(xmajorLocator)  
 ax.xaxis.set_major_formatter(xmajorFormatter)
-=======
-levels=[10,20,30,40,60]
-plt.contour(cont_reg,colors='white',levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
->>>>>>> 599dde07c491fa1f0a9de06f9075aecb7a791935
+
 #
 levels=[10,20,30,40,60]
 cs=ax.contour(cont_reg,colors='white',levels=levels,origin='lower',interpolation='nearest',extent=[l2,l1,b1,b2])
 cbar.add_lines(cs)
-ax.add_patch(patches.Circle((16.79, 0.0),radius=20/3600/2,color='white',fill=True))
-#ax.add_patch(patches.Circle((15.95, 0.14),radius=20/3600/2,color='white',fill=True))
+# ax.add_patch(patches.Circle((16.79, 0.0),radius=20/3600/2,color='white',fill=True))
+# ax.add_patch(patches.Circle((15.95, 0.14),radius=20/3600/2,color='white',fill=True))
